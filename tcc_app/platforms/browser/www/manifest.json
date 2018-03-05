@@ -1,9 +1,9 @@
 {
   "background_color": "#FFF",
   "display": "standalone",
-  "name": "HelloCordova",
-  "short_name": "HelloCordova",
-  "version": "app_geo",
+  "name": "App_TADS_Marcos",
+  "short_name": "App_TADS_Marcos",
+  "version": "br.com.marcos",
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "author": "Apache Cordova Team",
   "icons": [],

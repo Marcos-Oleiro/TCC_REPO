@@ -10,55 +10,54 @@
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="/css/materialize.min.css" media="screen,projection">
-    <link rel="stylesheet" type="text/css" href="css/index.css">
-    <title>APP</title>
+    <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection" />
+    <link rel="stylesheet" type="text/css" href="../css/index.css" />
+    <title>Registre-se</title>
 </head>
 
 <body>
     <div class="content">
-
-        <!-- <br>
-        <br> -->
         <center>
-            <img src="img/logo_oleiro.png">
+            <img src="../img/logo_oleiro.png">
             <!-- </center> -->
-
-
             <div class="row">
                 <form class="col s12 centered">
                     <div class="row">
+                        <div class="input-field col s12 ">
+                            <center> Nome de usuário </center>
+                            <input id="email" type="text">
+                            <!-- <label for="email" class="active black-text">Email</label> -->
+                        </div>
                         <div class="input-field col s12 ">
                             <center>E-mail</center>
                             <input id="email" type="email">
                             <!-- <label for="email" class="active black-text">Email</label> -->
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="input-field col s12 ">
                             <center>Senha</center>
                             <input id="password" type="password">
                             <!-- <label for="password" class="active black-text ">Password</label> -->
                         </div>
+                        <div class="input-field col s12 ">
+                            <center>Confirme a senha</center>
+                            <input id="password" type="password">
+                            <!-- <label for="password" class="active black-text ">Password</label> -->
+                        </div>
                     </div>
-                    <!-- <a href="#" class="waves-effect waves-light btn">Button</a> -->
                     <button class="btn waves-effect waves-light btn-blue black-text" style="background:whitesmoke" type="submit" name="action">Enviar</button>
                 </form>
 
             </div>
-            <br>
-            <br>
-            <br> Não tem uma conta?
-            <br> Registre-se
-            <a href="html/register.html" style="color: black">
-                <u>Aqui</u>
-            </a>
+
         </center>
     </div>
-    <script type="text/javascript" src="js/jquery-3.3.1.slim.min.js"></script>
-    <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="js/materialize.min.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="../js/jquery-3.3.1.slim.min.js"></script>
+
+    <script type="text/javascript" src="../cordova.js"></script>
+    <script type="text/javascript" src="../js/materialize.min.js"></script>
+    <script type="text/javascript" src="../js/index.js"></script>
+
+
 </body>
 
 </html>

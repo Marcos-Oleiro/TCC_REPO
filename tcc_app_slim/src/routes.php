@@ -23,10 +23,12 @@ $app->get('/games', function (Request $request, Response $response, array $args)
     return $response->withJson($games);
 
 });
-$app->get('/users', function (Request $request, Response $response, array $args) {
+$app->post('/users', function (Request $request, Response $response, array $args) { 
+    // $aux = $this->request->getBody();
+    $aux = $this->request->getParsedBody();
+    $aux2 ;
 
-    $str = ['nome'=>'Marcos Oleiro', 'idade' =>'31 anos'];
-    return $response->withJson($str);
+    return $this->response->write(print_r(array_keys($aux)));
 
 });
 

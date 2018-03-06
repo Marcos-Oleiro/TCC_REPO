@@ -1,0 +1,22 @@
+{
+  "name": "tcc_repo",
+  "version": "1.0.0",
+  "description": "TCC - Marcos Oleiro",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Marcos-Oleiro/TCC_REPO.git"
+  },
+  "author": "Marcos Oleiro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Marcos-Oleiro/TCC_REPO/issues"
+  },
+  "homepage": "https://github.com/Marcos-Oleiro/TCC_REPO#readme",
+  "devDependencies": {
+    "cordova": "^8.0.0"
+  }
+}

@@ -20,34 +20,34 @@
     <div class="content">
         <center>
             <img src="../img/logo_oleiro.png">
-            <!-- </center> -->
+            </center>
             <div class="row">
                 <form class="col s12 centered" id="register_form" action="#">
                     <div class="row">
                         <div class="input-field col s12 ">
                             <center> Nome de usuário </center>
-                            <input name="nickname" type="text">
+                            <input name="nickname" type="text" value = "spellzito">
                             <!-- <label for="email" class="active black-text">Email</label> -->
                         </div>
                         <div class="input-field col s12 ">
                             <center>E-mail</center>
-                            <input name="email" type="email">
+                            <input name="email" type="email" value = "spellzito@oleirosoftware.com.br">
                             <!-- <label for="email" class="active black-text">Email</label> -->
                         </div>
                         <div class="input-field col s12 ">
                             <center>Senha</center>
-                            <input name="passwd" type="password">
+                            <input name="passwd" type="password" value = "senhadificil">
                             <!-- <label for="password" class="active black-text ">Password</label> -->
                         </div>
                         <div class="input-field col s12 ">
                             <center>Confirme a senha</center>
-                            <input name="passwd_confirm" type="password">
+                            <input name="passwd_confirm" type="password" value = "senhadificilrepetida">
                             <!-- <label for="password" class="active black-text ">Password</label> -->
                         </div>
                     </div>
-                    <!-- <button class="btn waves-effect waves-light btn-blue black-text" style="background:whitesmoke" type="submit" name="action"
-                        id="btn_reg" >Enviar</button> -->
-                        <input type="submit" value="Enviar">
+                    <button class="btn waves-effect waves-light btn-blue black-text" style="background:whitesmoke" type="submit" name="action"
+                        id="btn_reg" >Enviar</button>
+                        <!-- <input type="submit" value="Enviar"> -->
                 </form>
 
             </div>
@@ -57,15 +57,19 @@
 
     <script type="text/javascript" src="../js/jquery-3.3.1.slim.min.js"></script>
     <script type="text/javascript">
-        $("#register_form").submit(function (event) {
-                console.log($(this).serializeArray());
-                event.preventDefault();
-        });
+        // $("#register_form").submit(function (event) {
+        //     // console.log($(this).serializeArray());
+        //    var a = $(this).serializeArray();
+        //    console.log(a);
+            
+        //     // SendFormData(a);
+        //     event.preventDefault();
+        // });
     </script>
     <script type="text/javascript" src="../cordova.js"></script>
     <script type="text/javascript" src="../js/materialize.min.js"></script>
     <!-- <script type="text/javascript" src="../js/index.js"></script> -->
-    <!-- <script type="text/javascript" src="../js/register.js"></script> -->
+    <script type="text/javascript" src="../js/register.js"></script>
 
 
 </body>

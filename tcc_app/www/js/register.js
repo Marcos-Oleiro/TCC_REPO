@@ -12,7 +12,7 @@ var divFields = document.querySelector('div.fields');
 
 document.addEventListener('deviceready', function () {
 
-    // btn_form.addEventListener('click', SendFormData());
+    // Função do Jquery - quando o evento submit é realizado, chama a função SendFormData
     $("#register_form").submit(SendFormData);
 });
 
@@ -23,6 +23,7 @@ function SendFormData() {
     var nickname, email, senha;
     var form_value = ($(this).serializeArray());
     var empty_fields = checkEmptyFormFields(form_value);
+
     var pattern_email = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     var pattern_passwd = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,10}$/;
     var pattern_nickaname = /([A-Z]*|[a-z]*|[0-9]*|[\-_\$]*)^.{4,10}/;
@@ -61,7 +62,15 @@ function SendFormData() {
             // todos os campos passam no teste e os dados do formuládevem devem ir pro beck-end
             else {
                 // console.log('Email válido');
-                window.location = "https://www.google.com" // testando o redirecionamento se os campos tiverem ok
+                var user_info = {
+                    'nickname' : nickname,
+                    'email' : email,
+                    'passwd' : passwd
+                }
+                var myJSON = JSON.stringify(user_info);
+                console.log(myJSON);
+                // window.location = "https://www.google.com" // testando o redirecionamento se os campos tiverem ok
+
                 event.preventDefault();
             }
         }

@@ -27,6 +27,8 @@ $app->get('/games', function (Request $request, Response $response, array $args)
 // método para adicionar usuários ao banco de dados  (Registro de novos usuários)
 $app->post('/users', function (Request $request, Response $response, array $args) { 
 
+    return $response->withJson($this->request->getParsedBody());
+
     // // vetor com as informações que vem via formulário
     // $user_data = $this->request->getParsedBody();
 
@@ -70,7 +72,7 @@ $app->post('/users', function (Request $request, Response $response, array $args
     // $stmt->execute();
     
     // return $this->response->write("Usuário cadastrado!.");
-    return $this->response->write("Funcionou!");
+    // return $this->response->write("Funcionou!");
 });
 
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {

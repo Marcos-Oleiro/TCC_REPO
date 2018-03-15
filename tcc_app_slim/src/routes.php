@@ -3,6 +3,9 @@
 use Slim\Http\Request;
 use Slim\Http\Response;
 
+require dirname(__FILE__) . '/../libs/ValidateUser.php';
+
+
 
 // Routes
 //$app->get('/hello/{name}', function ($request, $response, $args) {
@@ -27,10 +30,45 @@ $app->get('/games', function (Request $request, Response $response, array $args)
 // método para adicionar usuários ao banco de dados  (Registro de novos usuários)
 $app->post('/users', function (Request $request, Response $response, array $args) { 
 
-    return $response->withJson($this->request->getParsedBody());
+    // return $response->withJson(array_key_exists("fsdgww",$this->request->getParsedBody()));
+    // $aux = validateFields($this->request->getParsedBody());  
+    // return $response->withJson($aux);
+    
+    // // return $this->response->write("Funcionou!");
 
-    // // vetor com as informações que vem via formulário
-    // $user_data = $this->request->getParsedBody();
+    // vetor com as informações que vem via formulário
+    $user_data = $this->request->getParsedBody();
+
+    // verifique se os campos estão vazios
+    if ( !checkEmptyFields ($user_data) ) {
+
+        // verifica se os dados vieram com os campos necessários
+        if (testFieldsNames($user_data)){
+
+            if (!validateNickname('nickname')){ // se o nickname não passar no teste, vai entrar nesse if
+
+            }
+            elseif (!validateEmail('email')){ // se o email não passar no teste, vai entrar nesse if
+
+            }
+            elseif(!validadePasswd('passwd')){ // se o passwd não passar no teste, vai entrar nesse if
+
+            }
+            else{ // se passar em todos os testes, entra aqui
+                // Se passar em todos os testes, é necessário  verificar se o email e o nickname já estão cadastados
+
+                
+
+            }
+        }
+        else{
+            // campos com nomes errados
+        }
+
+    }
+    else{
+        // dados com campos vazios
+    }
 
     // // string para camulflar a string no banco de dados
     // $stringPass = "nirvana"; 

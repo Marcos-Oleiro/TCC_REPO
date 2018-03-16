@@ -36,8 +36,11 @@ $app->post('/users', function (Request $request, Response $response, array $args
     
     // // return $this->response->write("Funcionou!");
 
+    $db_con = $this->db;
+    
     // vetor com as informações que vem via formulário
     $user_data = $this->request->getParsedBody();
+    return $this->response->write($this->request->getParsedBody());
 
     // verifique se os campos estão vazios
     if ( !checkEmptyFields ($user_data) ) {
@@ -45,33 +48,50 @@ $app->post('/users', function (Request $request, Response $response, array $args
         // verifica se os dados vieram com os campos necessários
         if (testFieldsNames($user_data)){
 
-            if (!validateNickname('nickname')){ // se o nickname não passar no teste, vai entrar nesse if
-
+            if (!validateNickname($user_data['nickname'])){ // se o nickname não passar no teste, vai entrar nesse if
+                // Fazer retorno, informando o erro
+                return $this->response->write("O nome de usuário não é válido");
             }
-            elseif (!validateEmail('email')){ // se o email não passar no teste, vai entrar nesse if
-
+            elseif (!validateEmail($user_data['email'])){ // se o email não passar no teste, vai entrar nesse if
+                // Fazer retorno, informando o erro
+                return $this->response->write("O e-mail não é válido");
             }
-            elseif(!validadePasswd('passwd')){ // se o passwd não passar no teste, vai entrar nesse if
-
+            elseif(!validatePasswd($user_data['passwd'])){ // se o passwd não passar no teste, vai entrar nesse if
+                // Fazer retorno, informando o erro
+                return $this->response->write("A senha não é válida");
             }
             else{ // se passar em todos os testes, entra aqui
                 // Se passar em todos os testes, é necessário  verificar se o email e o nickname já estão cadastados
-
+                $new_user_return = checkNewUser($user_data['email'],$user_data['nickname'],$db_con);
+                
+                if ( $new_user_return == "OK") { // se o nickname e email já não estiver cadastrado, entra nesse IF. Aqui é feita a inserção no banco de dados.
+                    $stringPass = "nirvana"; 
+                    $user_data['passwd'] = hash('sha256',$user_data['passwd'] . $stringPass );
+                    saveNewUser($user_data['nickname'],$user_data['email'],$user_data['passwd'],$db_con);
+                    return $this->response->write("Salvou!");
+                }
+                else{ // email e/ou nickname já cadastrados
+                    // retornar a mensagem de erro.
+                    return $this->response->write("Nome de usuário e/ou email já cadastrados");
+                }
                 
 
             }
         }
         else{
             // campos com nomes errados
+            // Fazer retorno, informando o erro
+            return $this->response->write("Erro nas informações");
         }
-
+        
     }
     else{
         // dados com campos vazios
+        // Fazer retorno, informando o erro
+        return $this->response->write("Erro nas informações");
     }
 
     // // string para camulflar a string no banco de dados
-    // $stringPass = "nirvana"; 
     // // senha gerada (concatenada com uma string e gerada a hash)
     // $user_data['passwd'] = hash('sha256',$user_data['passwd'] . $stringPass );
 

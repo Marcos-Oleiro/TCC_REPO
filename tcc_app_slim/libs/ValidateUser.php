@@ -51,9 +51,9 @@ function validateReGex ($pattern, $field){
 
 // Verifica se os campos e-mail e nickname já são cadastrados no banco de dados. Retorna a string 'OK' se nenhum dos campos forem cadastrados no banco de dados. Se ualgum dos dois campos for
 // cadastrado, retorna uma string informando.
-function checkNewUser ($email, $nickname){
+function checkNewUser ($email, $nickname, $db_con){
 
-    $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");
+    $stmt = $db_con->prepare("SELECT * FROM users WHERE email = :email");
     $stmt->bindParam(':email',$email);
     $stmt->execute();
     $row = $stmt->fetch(); // se não for encontrado resultado, o fetch retorna false
@@ -67,7 +67,7 @@ function checkNewUser ($email, $nickname){
 
 
     // verificar se o nickname já está cadastrado
-    $stmt = $this->db->prepare("SELECT * FROM users WHERE nickname = :nickname");
+    $stmt = $db_con->prepare("SELECT * FROM users WHERE nickname = :nickname");
     $stmt->bindParam(':nickname',$nickname);
     $stmt->execute();
     $row = $stmt->fetch(); // se não for encontrado resultado, o fetch retorna false
@@ -77,5 +77,12 @@ function checkNewUser ($email, $nickname){
     }
 
     return "OK";
+}
 
+function saveNewUser ($nickname, $email, $passwd, $db_con){
+    $stmt = $db_con->prepare ("INSERT INTO users (nickname, email,passwd) VALUES(:nickname,:email,:passwd)");
+    $stmt->bindParam(':nickname', $nickname);
+    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':passwd', $passwd);
+    $stmt->execute();
 }

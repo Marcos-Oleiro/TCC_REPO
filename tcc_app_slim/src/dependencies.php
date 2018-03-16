@@ -21,7 +21,7 @@ $container['logger'] = function ($c) {
 $container['db'] = function($c) {
     $db = $c['settings']['db'];
     $host = "tccappdb.c9gqmcom8enw.us-east-2.rds.amazonaws.com";
-    $dbname = "tcc_app_marcos";
+    $dbname = "tcc_marcos";
     $user = "tcc_marcos";
     $pass = "!Aa456202";
     $pdo = new PDO('pgsql:host=' . $host . ';dbname=' . $dbname,$user, $pass);

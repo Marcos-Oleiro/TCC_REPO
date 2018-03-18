@@ -26,18 +26,22 @@
 
 
             <div class="row">
-                <form class="col s12 centered">
+                <form class="col s12 centered" id="login_form" action="#">
+                    <div class="mail" style="color: red; font-weight: 900"></div>
                     <div class="row">
                         <div class="input-field col s12 ">
-                            <center>E-mail</center>
-                            <input id="email" type="email">
-                            <!-- <label for="email" class="active black-text">Email</label> -->
+                            <div class="input-field col s12 ">
+                                <center>E-mail</center>
+                                <input name="email" type="email" value="spellzito@oleirosoftware.com.br">
+                                <!-- <label for="email" class="active black-text">Email</label> -->
+                            </div>
                         </div>
                     </div>
+                    <div class="mail" style="color: red; font-weight: 900"></div>
                     <div class="row">
                         <div class="input-field col s12 ">
                             <center>Senha</center>
-                            <input id="passwd" type="password">
+                            <input name="passwd" type="password" id="passwd_field" value="1aA9!ss">
                             <!-- <label for="password" class="active black-text ">Password</label> -->
                         </div>
                     </div>
@@ -58,7 +62,10 @@
     <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
+    <!-- <script type="text/javascript" src="js/lib.js"></script> -->
     <script type="text/javascript" src="js/index.js"></script>
+    
+
 </body>
 
 </html>

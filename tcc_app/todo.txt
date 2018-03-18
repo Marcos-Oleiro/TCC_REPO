@@ -1,0 +1,2 @@
+Perguntar pro Márcio:
+1 - Como colocar as dicas no formulário de registro, informando os requisitos de senha, nickname.

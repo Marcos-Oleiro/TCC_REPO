@@ -30,17 +30,15 @@ $app->get('/games', function (Request $request, Response $response, array $args)
 // método para adicionar usuários ao banco de dados  (Registro de novos usuários)
 $app->post('/users', function (Request $request, Response $response, array $args) { 
 
-    // return $response->withJson(array_key_exists("fsdgww",$this->request->getParsedBody()));
-    // $aux = validateFields($this->request->getParsedBody());  
-    // return $response->withJson($aux);
-    
-    // // return $this->response->write("Funcionou!");
 
+    // a resposta deve ir para o front-end em formna de json, então eu faço um array e o transformo em json
+    $answer = [];
+    // conexão do banco
     $db_con = $this->db;
     
     // vetor com as informações que vem via formulário
     $user_data = $this->request->getParsedBody();
-    return $this->response->write($this->request->getParsedBody());
+    // return $this->response->write($this->request->getParsedBody());
 
     // verifique se os campos estão vazios
     if ( !checkEmptyFields ($user_data) ) {
@@ -50,15 +48,24 @@ $app->post('/users', function (Request $request, Response $response, array $args
 
             if (!validateNickname($user_data['nickname'])){ // se o nickname não passar no teste, vai entrar nesse if
                 // Fazer retorno, informando o erro
-                return $this->response->write("O nome de usuário não é válido");
+                $answer['message'] = "O nome de usuário não é válido";
+                $json = json_encode($answer);
+                return $this->response->withJson($json);
+                // return $this->response->write("O nome de usuário não é válido");
             }
             elseif (!validateEmail($user_data['email'])){ // se o email não passar no teste, vai entrar nesse if
                 // Fazer retorno, informando o erro
-                return $this->response->write("O e-mail não é válido");
+                $answer['message'] = "O e-mail não é válido";
+                $json = json_encode($answer);
+                return $this->response->withJson($json);
+                // return $this->response->write("O e-mail não é válido");
             }
             elseif(!validatePasswd($user_data['passwd'])){ // se o passwd não passar no teste, vai entrar nesse if
                 // Fazer retorno, informando o erro
-                return $this->response->write("A senha não é válida");
+                $answer['message'] = "O senha não é válida";
+                $json = json_encode($answer);
+                return $this->response->withJson($json);
+                // return $this->response->write("A senha não é válida");
             }
             else{ // se passar em todos os testes, entra aqui
                 // Se passar em todos os testes, é necessário  verificar se o email e o nickname já estão cadastados
@@ -68,69 +75,37 @@ $app->post('/users', function (Request $request, Response $response, array $args
                     $stringPass = "nirvana"; 
                     $user_data['passwd'] = hash('sha256',$user_data['passwd'] . $stringPass );
                     saveNewUser($user_data['nickname'],$user_data['email'],$user_data['passwd'],$db_con);
-                    return $this->response->write("Salvou!");
+                    $answer['message'] = "Salvou";
+                    $json = json_encode($answer);
+                    return $this->response->withJson($json);
+                    // return $this->response->write("Salvou");
                 }
                 else{ // email e/ou nickname já cadastrados
                     // retornar a mensagem de erro.
-                    return $this->response->write("Nome de usuário e/ou email já cadastrados");
+                    $answer['message'] = "Nome de usuário e/ou e-mail já cadastrados";
+                    $json = json_encode($answer);
+                    return $this->response->withJson($json);
+                    // return $this->response->write("Nome de usuário e/ou e-mail já cadastrados");
                 }
-                
-
             }
         }
         else{
             // campos com nomes errados
             // Fazer retorno, informando o erro
-            return $this->response->write("Erro nas informações");
+            $answer['message'] = "Erro nas informações";
+            $json = json_encode($answer);
+            return $this->response->withJson($json);
+            // return $this->response->write("Erro nas informações");
         }
-        
     }
     else{
         // dados com campos vazios
         // Fazer retorno, informando o erro
-        return $this->response->write("Erro nas informações");
+        $answer['message'] = "Erro nas informações";
+        $json = json_encode($answer);
+        return $this->response->withJson($json);
+        // return $this->response->write("Erro nas informações");
     }
-
-    // // string para camulflar a string no banco de dados
-    // // senha gerada (concatenada com uma string e gerada a hash)
-    // $user_data['passwd'] = hash('sha256',$user_data['passwd'] . $stringPass );
-
-    // // verificar se o e-mail já está cadastrado
-
-    // $aux = "example@domain.com";
-    // $stmt = $this->db->prepare("SELECT * FROM users WHERE email = :email");
-    // // $stmt->bindParam(':email',$user_data['email']);
-    // $stmt->bindParam(':email',$aux);
-    // $stmt->execute();
-    // $row = $stmt->fetch(); // se não for encontrado resultado, o fetch retorna false
-
-    // if ( $row != false ) {
-    //     return $this->response->write("E-mail já cadastrado.");
-    // }
-
-    // $stmt = null;
-    // $row = null;
-
-
-    // // verificar se o nickname já está cadastrado
-    // $stmt = $this->db->prepare("SELECT * FROM users WHERE nickname = :nickname");
-    // $stmt->bindParam(':nickname',$user_data['nickname']);
-    // $stmt->execute();
-    // $row = $stmt->fetch(); // se não for encontrado resultado, o fetch retorna false
-    
-    // if ( $row != false ) {
-    //     return $this->response->write("Nome de usuário já cadastrado.");
-    // }
-
-    // // salva no banco
-    // $stmt = $this->db->prepare ("INSERT INTO users (nickname, email,passwd) VALUES(:nickname,:email,:passwd)");
-    // $stmt->bindParam(':nickname', $user_data['nickname']);
-    // $stmt->bindParam(':email', $user_data['email']);
-    // $stmt->bindParam(':passwd', $user_data['passwd']);
-    // $stmt->execute();
-    
-    // return $this->response->write("Usuário cadastrado!.");
-    // return $this->response->write("Funcionou!");
 });
 
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {

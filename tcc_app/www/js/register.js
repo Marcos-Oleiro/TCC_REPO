@@ -74,10 +74,21 @@ function SendFormData() {
                     }
                 });
                 var myJSON = JSON.stringify(user_info);
-                console.log(myJSON);
+                // console.log(myJSON);
                 // window.location = "https://www.google.com" // testando o redirecionamento se os campos tiverem ok
                 var url = "http://localhost:8080/users";
-                $.post(url, myJSON,function(data){console.log(data);});
+                $.post(url, myJSON,function(data){
+                    $server_response = JSON.parse(data)['message'];
+                    console.log($server_response);
+                    if ($server_response === "Salvou") {
+                        window.location = "https://www.google.com"; // tem que redirecionar para a home do usuário
+                    }
+                    else{
+                        divFields.textContent = $server_response;
+                    }
+                    
+                    
+                });
 
                 event.preventDefault();
             }

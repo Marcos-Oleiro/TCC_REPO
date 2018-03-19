@@ -18,26 +18,12 @@ $container['logger'] = function ($c) {
     return $logger;
 };
 
-// $container['db'] = function($c) {
-//     $db = $c['settings']['db'];
-//     $host = "tccappdb.c9gqmcom8enw.us-east-2.rds.amazonaws.com";
-//     $dbname = "tcc_marcos";
-//     $user = "tcc_marcos";
-//     $pass = "!Aa456202";
-//     $pdo = new PDO('pgsql:host=' . $host . ';dbname=' . $dbname,$user, $pass);
-//     // PDO("pgsql:host=localhost;port=;dbname=bancoteste;user=root;password=12345
-//     // $pdo = new PDO("pgsql:host=" . $host . ";dbname=" . $dbname . "; user=" . $user . ";password=" . $pass);
-//     //  $user, $pass);
-//     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-//     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-//   return $pdo;
-// };
 $container['db'] = function($c) {
     $db = $c['settings']['db'];
-    $host = "localhost";
-    $dbname = "tcc_app";
-    $user = "postgres";
-    $pass = "postgres";
+    $host = "tccappdb.c9gqmcom8enw.us-east-2.rds.amazonaws.com";
+    $dbname = "tcc_marcos";
+    $user = "tcc_marcos";
+    $pass = "!Aa456202";
     $pdo = new PDO('pgsql:host=' . $host . ';dbname=' . $dbname,$user, $pass);
     // PDO("pgsql:host=localhost;port=;dbname=bancoteste;user=root;password=12345
     // $pdo = new PDO("pgsql:host=" . $host . ";dbname=" . $dbname . "; user=" . $user . ";password=" . $pass);
@@ -46,3 +32,17 @@ $container['db'] = function($c) {
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
   return $pdo;
 };
+// $container['db'] = function($c) {
+//     $db = $c['settings']['db'];
+//     $host = "localhost";
+//     $dbname = "tcc_app";
+//     $user = "postgres";
+//     $pass = "postgres";
+//     $pdo = new PDO('pgsql:host=' . $host . ';dbname=' . $dbname,$user, $pass);
+//     // PDO("pgsql:host=localhost;port=;dbname=bancoteste;user=root;password=12345
+//     // $pdo = new PDO("pgsql:host=" . $host . ";dbname=" . $dbname . "; user=" . $user . ";password=" . $pass);
+//     //  $user, $pass);
+//     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+//   return $pdo;
+// };

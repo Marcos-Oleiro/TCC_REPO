@@ -1,4 +1,5 @@
-
+var divEmail = document.querySelector('div.email');
+var divPasswd = document.querySelector('div.passwd');
 
 document.addEventListener('deviceready', function () {
 
@@ -9,25 +10,76 @@ document.addEventListener('deviceready', function () {
 
 function SendLoginForm () {
 
+    // Declaração de variáveis
     var form_value;
-    var nickname, email, senha;
+    var email, passwd;
     var form_value = ($(this).serializeArray());
     var pattern_email = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     var pattern_passwd = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,10}$/;
+    // Final da declaração das variáveis
 
-
-    console.log(form_value);
     var empty_fields = checkEmptyFormFields(form_value);
-    console.log(empty_fields);
-    // if (empty_fields){
-    //     console.log("true"); 
-        
-    // }
-    // else{
-    //     console.log("false"); 
-        
-    // }
-    event.preventDefault();
+    divEmail.textContent = "";
+    divPasswd.textContent = "";
+    
+    // Se os campos tiverem preenchidos, deve entrar nesse IF
+    if (!empty_fields) {
+
+        email = form_value[0].value.trim();
+        passwd = form_value[1].value.trim();
+
+        // se o campo e-mail não é válido, entra nesse IF
+        if ( !verifyField(pattern_email,email)) {
+            // console.log("E-mail não é válido");
+            divEmail.textContent = "O e-mail não é válido";
+            event.preventDefault();
+            
+        }
+        // se o campo senha não é válido, entra nesse IF
+        else if ( !verifyField(pattern_passwd, passwd)){
+            // console.log("Senha não válida");
+            divPasswd.textContent = "A senha informada não é valida";
+            event.preventDefault();
+            
+        }
+        // Entra aqui se os dois campos estiverem preenchidos corretamente.
+        else{
+            // console.log("Campos OK");
+            var Log_info = {
+                'email' : email,
+                'passwd' : passwd
+            }
+            $.ajaxSetup({
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
+            var myJSON = JSON.stringify(user_info);
+            // console.log(myJSON);
+            // window.location = "https://www.google.com" // testando o redirecionamento se os campos tiverem ok
+            var url = "http://localhost:8080/users";
+            $.post(url, myJSON,function(data){
+                $server_response = JSON.parse(data)['message'];
+                console.log($server_response);
+                if ($server_response === "Salvou") {
+                    window.location = "https://www.google.com"; // tem que redirecionar para a home do usuário
+                }
+                else{
+                    divFields.textContent = $server_response;
+                }
+                
+                
+            });       
+            event.preventDefault();
+        }
+    }
+    else{ // Campos Vazios
+        // console.log("Campos Vazios");
+        divEmail.textContent = "Os campos devem ser preenchidos";
+        event.preventDefault();
+    }
+    // event.preventDefault();
 
 }
 
@@ -35,9 +87,9 @@ function SendLoginForm () {
 function checkEmptyFormFields(form_value) {
 
     if ((form_value[0].value.trim().length == 0) || (form_value[1].value.trim().length == 0) ) {
-        return 'true';
+        return true;
     }
-    return 'false';
+    return false;
 }
 
 

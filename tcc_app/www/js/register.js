@@ -20,7 +20,7 @@ document.addEventListener('deviceready', function () {
 function SendFormData() {
     // Variáveis - Começo
     var form_value;
-    var nickname, email, senha;
+    var nickname, email, passwd;
     var form_value = ($(this).serializeArray());
     var empty_fields = checkEmptyFormFields(form_value);
 
@@ -59,7 +59,7 @@ function SendFormData() {
                 divPass.textContent = "A senha deve correspondr ao mínimo exigido";
                 event.preventDefault();
             }
-            // todos os campos passam no teste e os dados do formuládevem devem ir pro beck-end
+            // todos os campos passam no teste e os dados do formulá devem devem ir pro beck-end
             else {
                 // console.log('Email válido');
                 var user_info = {

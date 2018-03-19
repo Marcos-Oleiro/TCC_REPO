@@ -86,3 +86,7 @@ function saveNewUser ($nickname, $email, $passwd, $db_con){
     $stmt->bindParam(':passwd', $passwd);
     $stmt->execute();
 }
+
+function dbPass ($passwd) {
+    return hash('sha256',$passwd . $stringPass );
+}

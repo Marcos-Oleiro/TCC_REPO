@@ -66,7 +66,7 @@ function SendFormData() {
                     'nickname' : nickname,
                     'email' : email,
                     'passwd' : passwd
-                }
+                };
                 $.ajaxSetup({
                     headers: {
                         'Content-Type': 'application/json',

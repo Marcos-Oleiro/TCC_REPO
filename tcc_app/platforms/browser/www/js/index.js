@@ -45,29 +45,32 @@ function SendLoginForm () {
         // Entra aqui se os dois campos estiverem preenchidos corretamente.
         else{
             // console.log("Campos OK");
-            var Log_info = {
+            var login_info = {
                 'email' : email,
                 'passwd' : passwd
-            }
+            };
             $.ajaxSetup({
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 }
             });
-            var myJSON = JSON.stringify(user_info);
-            // console.log(myJSON);
+            var myJSON = JSON.stringify(login_info);
+            console.log(myJSON);
             // window.location = "https://www.google.com" // testando o redirecionamento se os campos tiverem ok
-            var url = "http://localhost:8080/users";
+            var url = "http://localhost:8080/login";
+            console.log(url);
             $.post(url, myJSON,function(data){
-                $server_response = JSON.parse(data)['message'];
-                console.log($server_response);
-                if ($server_response === "Salvou") {
-                    window.location = "https://www.google.com"; // tem que redirecionar para a home do usuário
+                if ( JSON.parse(data)['message'] == 'OK' ){
+                    // console.log("Usuário Logado")
+                     
+                    window.location = "html/home.html";
                 }
                 else{
-                    divFields.textContent = $server_response;
+                    // console.log(JSON.parse(data)['message']);
+                    divEmail.textContent = JSON.parse(data)['message'];
                 }
+                
                 
                 
             });       

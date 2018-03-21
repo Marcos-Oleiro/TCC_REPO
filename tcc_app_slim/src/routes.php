@@ -72,7 +72,7 @@ $app->post('/users', function (Request $request, Response $response, array $args
                 $new_user_return = checkNewUser($user_data['email'],$user_data['nickname'],$db_con);
                 
                 if ( $new_user_return == "OK") { // se o nickname e email já não estiver cadastrado, entra nesse IF. Aqui é feita a inserção no banco de dados.
-                    $stringPass = "nirvana"; 
+                    // $stringPass = "nirvana"; 
                     $user_data['passwd'] = dbPass($user_data['passwd']);
                     saveNewUser($user_data['nickname'],$user_data['email'],$user_data['passwd'],$db_con);
                     $answer['message'] = "Salvou";
@@ -122,21 +122,31 @@ $app->post('/login', function (Request $request, Response $response, array $args
     // inserir um novo item dentro do array para poder utilizar as mesmas funções que foram usadas no formulário de registro.
     $user_data['nickname'] = 'nickname';  
 
-    // return $this->response->withJson( $user_data);
-
     // verifique se os campos estão vazios
-    if ( !checkEmptyFields ($user_data) ) {
+    if ( !checkEmptyFields($user_data) ) {
 
         // verifica se os dados vieram com os campos necessários
         if (testFieldsNames($user_data)){
-            return $this->response->write("Campos OK");
+            // return $this->response->write("Campos OK");
+            // return $this->response->write(checkUser($user_data['email'],dbPass($user_data['passwd']),$db_con));
+            $db_data = checkUser($user_data['email'],dbPass($user_data['passwd']),$db_con);
+            // return $this->response->withJson($db_data);
+            $answer['message'] = $db_data;
+            $json = json_encode($answer);
+            return $this->response->withJson($json);
         }
         else{
-            return $this->response->write("Campos Errados");
+            // return $this->response->write("Campos Errados");
+            $answer['message'] = 'Campos Incorretos';
+            $json = json_encode($answer);
+            return $this->response->withJson($json);
         }
     }
     else{
-        return $this->response->write("Campos vazios");
+        // return $this->response->write("Campos vazios");
+        $answer['message'] = 'Informação incorreta';
+        $json = json_encode($answer);
+        return $this->response->withJson($json);
     }   
 
 

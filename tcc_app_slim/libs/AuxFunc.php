@@ -4,7 +4,7 @@
 function checkEmptyFields($user_data){
 
     $user_data_values = array_values($user_data);
-
+    
     if ( count($user_data_values) != 3 ){
         return true;
     } 
@@ -88,5 +88,29 @@ function saveNewUser ($nickname, $email, $passwd, $db_con){
 }
 
 function dbPass ($passwd) {
-    return hash('sha256',$passwd . $stringPass );
+    return hash('sha256',$passwd . 'nirvana' );
+}
+
+function checkUser ($email, $passwd, $db_con) {
+
+    $stmt = $db_con->prepare("SELECT * FROM users WHERE email = :email");
+    $stmt->bindParam(':email' , $email);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    // return "olá";
+    // return $passwd;
+    if ( $row != false ){
+        if ($row['passwd'] ==  $passwd){
+            // return print_r($row);
+            return "OK";
+        }
+        else{
+            return 'E-mail ou Senha incorretos';
+        }
+        
+    }
+    else {
+        return 'Dados não cadastrados';
+    }
+
 }

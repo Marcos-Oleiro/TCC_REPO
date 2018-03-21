@@ -8,11 +8,11 @@ require dirname(__FILE__) . '/../libs/AuxFunc.php';
 
 
 // Routes
-//$app->get('/hello/{name}', function ($request, $response, $args) {
-////    return $response->write("Hello " . $args['name']);
-//    $string = "hello " . $args['name'];
-//    return $response->withJson($string);
-//});
+$app->get('/hello/{name}', function ($request, $response, $args) {
+//    return $response->write("Hello " . $args['name']);
+   $string = "hello " . $args['name'];
+   return $response->withJson($string);
+});
 $app->get('/games', function (Request $request, Response $response, array $args) {
 
     $stmt = $this->db->query("SELECT * FROM games");
@@ -77,6 +77,7 @@ $app->post('/users', function (Request $request, Response $response, array $args
                     saveNewUser($user_data['nickname'],$user_data['email'],$user_data['passwd'],$db_con);
                     $answer['message'] = "Salvou";
                     $json = json_encode($answer);
+                    logIn(); // "Setando" o valor na session como logado
                     return $this->response->withJson($json);
                     // return $this->response->write("Salvou");
                 }
@@ -107,7 +108,8 @@ $app->post('/users', function (Request $request, Response $response, array $args
         // return $this->response->write("Erro nas informações");
     }
 });
-// $app->post('/users', function (Request $request, Response $response, array $args) { 
+
+// método para validar os dados de login do usuário
 $app->post('/login', function (Request $request, Response $response, array $args) {
 
     // a resposta deve ir para o front-end em formna de json, então eu faço um array e o transformo em json
@@ -133,6 +135,7 @@ $app->post('/login', function (Request $request, Response $response, array $args
             // return $this->response->withJson($db_data);
             $answer['message'] = $db_data;
             $json = json_encode($answer);
+            logIn(); // "Setando" o valor na session como logado
             return $this->response->withJson($json);
         }
         else{
@@ -154,6 +157,17 @@ $app->post('/login', function (Request $request, Response $response, array $args
     
 });
 
+//$app->get('/hello/{name}', function ($request, $response, $args) {
+////    return $response->write("Hello " . $args['name']);
+//    $string = "hello " . $args['name'];
+//    return $response->withJson($string);
+//});
+
+//  método para carregar os dados do usuário para a pagina home
+$app->get('/home/{email}', function ( $request,  $response, $args){
+       $string = "hello " . $args['email'];
+    return $response->write($string);
+});
 
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {
     // Sample log message

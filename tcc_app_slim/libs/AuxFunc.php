@@ -78,7 +78,7 @@ function checkNewUser ($email, $nickname, $db_con){
 
     return "OK";
 }
-
+// função que salva no banco de dados o usuário recém registrado
 function saveNewUser ($nickname, $email, $passwd, $db_con){
     $stmt = $db_con->prepare ("INSERT INTO users (nickname, email,passwd) VALUES(:nickname,:email,:passwd)");
     $stmt->bindParam(':nickname', $nickname);
@@ -86,11 +86,11 @@ function saveNewUser ($nickname, $email, $passwd, $db_con){
     $stmt->bindParam(':passwd', $passwd);
     $stmt->execute();
 }
-
+// função devolve o password que vai ser salvo no banco de dados
 function dbPass ($passwd) {
     return hash('sha256',$passwd . 'nirvana' );
 }
-
+// função que verifica as credenciais do usuário
 function checkUser ($email, $passwd, $db_con) {
 
     $stmt = $db_con->prepare("SELECT * FROM users WHERE email = :email");
@@ -113,4 +113,15 @@ function checkUser ($email, $passwd, $db_con) {
         return 'Dados não cadastrados';
     }
 
+}
+
+function logIn(){
+    $_SESSION['logged'] = true;
+}
+function logOff(){
+    $_SESSION['logged'] = false;
+}
+
+function isLogged(){
+    return $_SESSION['logged'];
 }

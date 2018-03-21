@@ -56,14 +56,15 @@ function SendLoginForm () {
                 }
             });
             var myJSON = JSON.stringify(login_info);
-            console.log(myJSON);
+            // console.log(myJSON);
             // window.location = "https://www.google.com" // testando o redirecionamento se os campos tiverem ok
             var url = "http://localhost:8080/login";
-            console.log(url);
+            // console.log(url);
             $.post(url, myJSON,function(data){
+                console.log(JSON.parse(data)['message']);
                 if ( JSON.parse(data)['message'] == 'OK' ){
-                    // console.log("Usuário Logado")
-                     
+                    sessionStorage.setItem('email',email);
+                    // console.log(sessionStorage['email']);
                     window.location = "html/home.html";
                 }
                 else{

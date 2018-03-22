@@ -81,7 +81,7 @@ function SendFormData() {
                     $server_response = JSON.parse(data)['message'];
                     console.log($server_response);
                     if ($server_response === "Salvou") {
-                        window.location = "https://www.google.com"; // tem que redirecionar para a home do usuário
+                        window.location = ""; // tem que redirecionar para a home do usuário
                     }
                     else{
                         divFields.textContent = $server_response;

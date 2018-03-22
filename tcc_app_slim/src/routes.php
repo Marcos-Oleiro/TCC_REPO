@@ -157,16 +157,11 @@ $app->post('/login', function (Request $request, Response $response, array $args
     
 });
 
-//$app->get('/hello/{name}', function ($request, $response, $args) {
-////    return $response->write("Hello " . $args['name']);
-//    $string = "hello " . $args['name'];
-//    return $response->withJson($string);
-//});
 
-//  método para carregar os dados do usuário para a pagina home
-$app->get('/home/{email}', function ( $request,  $response, $args){
-       $string = "hello " . $args['email'];
-    return $response->write($string);
+$app->get('/home/{id}', function (Request $request, Response $response, array $args ) {
+
+    // return $this->response->write('olá');
+    return $this->response->withJson(json_encode(['message' => 'Testando ajax na página']));
 });
 
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {

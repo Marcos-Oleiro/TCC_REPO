@@ -102,7 +102,7 @@ function checkUser ($email, $passwd, $db_con) {
     if ( $row != false ){
         if ($row['passwd'] ==  $passwd){
             // return print_r($row);
-            return "OK";
+            return $row['id'];
         }
         else{
             return 'E-mail ou Senha incorretos';

@@ -62,18 +62,15 @@ function SendLoginForm () {
             // console.log(url);
             $.post(url, myJSON,function(data){
                 console.log(JSON.parse(data)['message']);
-                if ( JSON.parse(data)['message'] == 'OK' ){
-                    sessionStorage.setItem('email',email);
-                    // console.log(sessionStorage['email']);
+                if ( Number.isInteger(JSON.parse(data)['message'])  ){
+                    sessionStorage.setItem('id', JSON.parse(data)['message']);
+                    // console.log(sessionStorage['id']);
                     window.location = "html/home.html";
                 }
                 else{
-                    // console.log(JSON.parse(data)['message']);
                     divEmail.textContent = JSON.parse(data)['message'];
+
                 }
-                
-                
-                
             });       
             event.preventDefault();
         }

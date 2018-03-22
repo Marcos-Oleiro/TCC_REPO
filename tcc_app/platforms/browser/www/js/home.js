@@ -4,18 +4,23 @@ document.addEventListener('deviceready', function () {
 
 function loadInfo (){
     // var info = {
-    //     'email' : sessionStorage['email'] ,
+    //     'id' : sessionStorage['id'] ,
     // };
-    console.log(sessionStorage['email']);
+    // document.querySelector('h1.teste').textContent = sessionStorage['id'];
+    // console.log(sessionStorage['email']);
     $.ajaxSetup({
         headers: {
             // 'Content-Type': 'application/json',
             'Accept': 'application/json'
         }
     });
-    var url = 'http://localhost:8080/users/home/' + sessionStorage['email'];
+    var url = 'http://localhost:8080/home/' + sessionStorage['id'] ;
+    // var url = 'http://localhost:8080/home/' ;
     console.log(url);
     $.get(url, function (data){
-        // console.log(JSON.parse(data));
+        // console.log("oi");
+        console.log(JSON.parse(data)['message']);
+        document.querySelector('h1.teste').textContent = JSON.parse(data)['message'];
     });
+    event.preventDefault();
 }

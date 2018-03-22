@@ -125,3 +125,15 @@ function logOff(){
 function isLogged(){
     return $_SESSION['logged'];
 }
+
+function getUserData($id, $db_con){
+
+    $stmt = $db_con->prepare("SELECT photography, nickname FROM users WHERE id = :id");
+    $stmt->bindParam(':id' , $id);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    // return $id;  
+
+    return $row;
+
+}

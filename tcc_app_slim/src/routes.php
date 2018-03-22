@@ -160,8 +160,14 @@ $app->post('/login', function (Request $request, Response $response, array $args
 
 $app->get('/home/{id}', function (Request $request, Response $response, array $args ) {
 
-    // return $this->response->write('olá');
-    return $this->response->withJson(json_encode(['message' => 'Testando ajax na página']));
+    $id = intval($args['id']);
+
+    // conexão do banco
+    $db_con = $this->db;
+
+    
+    return $this->response->withJson(json_encode(getUserData($id,$db_con)));
+    
 });
 
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {

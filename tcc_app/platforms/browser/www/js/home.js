@@ -1,3 +1,7 @@
+var divPhoto = document.querySelector('div.photo');
+var divName = document.querySelector('div.name');
+
+
 document.addEventListener('deviceready', function () {
     loadInfo();
 });
@@ -19,8 +23,8 @@ function loadInfo (){
     console.log(url);
     $.get(url, function (data){
         // console.log("oi");
-        console.log(JSON.parse(data)['message']);
-        document.querySelector('h1.teste').textContent = JSON.parse(data)['message'];
+        // console.log(JSON.parse(data)['message']);
+        divName.textContent = JSON.parse(data)['nickname'];
     });
-    event.preventDefault();
+    
 }

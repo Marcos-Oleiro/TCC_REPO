@@ -9,34 +9,60 @@
     <link rel="stylesheet" type="text/css" href="../css/index.css">
     <link rel="stylesheet" type="text/css" href="../css/home.css">
     <link rel="stylesheet" type="text/css" href="../css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins:900" rel="stylesheet">
-    <title>Registre-se</title>
+    <title>Página Inicial</title>
 </head>
 
+
 <body>
+        
     <div class="content">
             <br><br><br>
         <center>
-            
             <div class="row">
-                    <a class="btn-flat white-text" id="name-div">
-                        <div class="name"></div>
-                    </a>
-                    <br><br>
-            </div>
 
+                <!-- <nav> -->
+                <nav class="transparent z-depth-0" >
+                    <div class="nav-wrapper" >
+                        <a class="brand-logo center">
+                            <div class="name"></div>    
+                        </a>
+                        <ul id="nav-mobile" class="right">
+                            
+                            <!-- Dropdown Trigger-->
+                            <a class='dropdown-button btn-flat' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
+                            
+                            <!-- Dropdown Structure -->
+                            <ul id='dropdown1' class='dropdown-content'>
+                                <li><a href="#!">one</a></li>
+                                <li><a href="#!">two</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#!">three</a></li>
+                                <li><a href="#!"><i class="material-icons">view_module</i>four</a></li>
+                                <li><a href="#!"><i class="material-icons">cloud</i>five</a></li>
+                            </ul>
+                            
+                        </ul>
+                    </div>
+                </nav>  
+            </div>
+          
             <div class="row" id="fundo">
-                <img src="../img/gohan.jpeg" alt="Informe a imagem" class=" responsive-img" id="photo"> 
+                
+                <img src="../img/gohan.jpeg" alt="Informe a imagem" class=" responsive-img" id="photo">  
+                <!-- <img alt="Informe a imagem" class=" responsive-img" id="photo">   -->
                 <br><br><br><br><br><br><br>
+                
             </div>
 
             <div class="row">
-                <a class="btn-flat black-text" style="background-color: white; border: 1px solid black; border-radius: 10px">
+                <a  class="btn-flat black-text" style="background-color: white; border: 1px solid black; border-radius: 10px">
                         Buscar Jogadores
                 </a>
             </div>
             <div class="row">
-                <a class="btn-flat black-text" style="background-color: white; border: 1px solid black; border-radius: 10px">
+                <a href="messages.html" class="btn-flat black-text" style="background-color: white; border: 1px solid black; border-radius: 10px">
                         Mensagens
                 </a>
             </div>
@@ -48,6 +74,9 @@
     <script type="text/javascript" src="../cordova.js"></script>
     <script type="text/javascript" src="../js/materialize.min.js"></script>
     <script type="text/javascript" src="../js/home.js"></script>
+    <script type="text/javascript">
+        $('.dropdown-trigger').dropdown();
+    </script>
 
 
 </body>

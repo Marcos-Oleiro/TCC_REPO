@@ -1,8 +1,12 @@
-#name-div{
-    background:#80d8ff;
-}
+/* #name-div{ */
+    /* background:#80d8ff; */
+/* } */
 #photo{
     height: 30vh ;
     width: 65vw;
 
+}
+#marcos{
+    /* height: 8vh ; */
+    width: 45vw;
 }

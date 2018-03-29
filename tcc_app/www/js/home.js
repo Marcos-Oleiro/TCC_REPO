@@ -22,15 +22,17 @@ function loadInfo (){
         }
     });
     var url = 'http://localhost:8080/home/' + sessionStorage['id'] ;
+    // var url = 'http://172.16.50.119:8080/home/' + sessionStorage['id'] ;
     // var url = 'http://localhost:8080/home/' ;
     console.log(url);
     $.get(url, function (data){
         // console.log("oi");
         // console.log(JSON.parse(data)['message']);
         // console.log(JSON.parse(data)['nickname']);
-        // if (JSON.parse(data)['photography'] === null){
-        //     // img.src = "../img/gohan.jpeg";
-        // }
+        if (JSON.parse(data)['photography'] === null){
+            img.src = "../img/icon_profile5.png";
+            // img.src = "../img/gohan.jpeg";
+        }
         divName.textContent = JSON.parse(data)['nickname'];
     });
     

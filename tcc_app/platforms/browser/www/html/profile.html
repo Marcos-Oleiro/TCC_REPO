@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="../css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins:900" rel="stylesheet">
-    <title>Página Inicial</title>
+    <title>Editar Perfil</title>
 </head>
 
 
@@ -22,6 +22,7 @@
         <center>
             <div class="row">
 
+                <!-- <nav> -->
                 <nav class="transparent z-depth-0" >
                     <div class="nav-wrapper" >
                         <a class="brand-logo center  light-blue lighten-2" style="border-radius: 10px" id="name_button">
@@ -34,10 +35,8 @@
                             
                             <!-- Dropdown Structure -->
                             <ul id='dropdown1' class='dropdown-content'>
-                                <!-- <li><a href="#" class="light-blue-text" id="profile_button">Perfil</a></li> -->
-                                <!-- <li><a href="#!" class="light-blue-text" id="passwd_button">Alterar Senha</a></li> -->
-                                <li><a href="profile.html" class="light-blue-text" id="profile_button">Perfil</a></li>
-                                <li><a href="#!" class="light-blue-text" id="passwd_button">Alterar Senha</a></li>
+                                <li><a href="home.html" class="light-blue-text">Home</a></li>
+                                <li><a href="#!" class="light-blue-text">Alterar Senha</a></li>
                             </ul>
                             
                         </ul>
@@ -54,16 +53,13 @@
                 
             </div>
 
-            <div class="row">
-                <a  class="btn-flat black-text" style="background-color: white; border: 1px solid black; border-radius: 10px">
-                        Buscar Jogadores
-                </a>
+            <div class="row" id="desc_form">
+                <form action="#" id="form_desc">
+                    <input type="submit">
+                </form> 
+                <textarea name="desc" id="desc_text" form="desc_form" maxlength="150" placeholder="Insira sua descrição" ></textarea>
             </div>
-            <div class="row">
-                <a href="messages.html" class="btn-flat black-text" style="background-color: white; border: 1px solid black; border-radius: 10px">
-                        Mensagens
-                </a>
-            </div>
+
 
         </center>
     </div>
@@ -71,7 +67,7 @@
 
     <script type="text/javascript" src="../cordova.js"></script>
     <script type="text/javascript" src="../js/materialize.min.js"></script>
-    <script type="text/javascript" src="../js/home.js"></script>
+    <script type="text/javascript" src="../js/profile.js"></script>
     <script type="text/javascript">
         $('.dropdown-trigger').dropdown();
     </script>

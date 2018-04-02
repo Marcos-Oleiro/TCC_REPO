@@ -5,8 +5,6 @@ use Slim\Http\Response;
 
 require dirname(__FILE__) . '/../libs/AuxFunc.php';
 
-
-
 // Routes
 $app->get('/hello/{name}', function ($request, $response, $args) {
 //    return $response->write("Hello " . $args['name']);
@@ -151,13 +149,9 @@ $app->post('/login', function (Request $request, Response $response, array $args
         $json = json_encode($answer);
         return $this->response->withJson($json);
     }   
-
-
-
-    
 });
 
-
+// retorna as informações  necessárias do usuário com a id informada.
 $app->get('/home/{id}', function (Request $request, Response $response, array $args ) {
 
     $id = intval($args['id']);
@@ -167,6 +161,20 @@ $app->get('/home/{id}', function (Request $request, Response $response, array $a
 
     
     return $this->response->withJson(json_encode(getUserData($id,$db_con)));
+    
+});
+
+// retorna as informações  necessárias do usuário com a id informada.
+$app->get('/profile/{id}', function (Request $request, Response $response, array $args ) {
+
+    $id = intval($args['id']);
+
+    // conexão do banco
+    $db_con = $this->db;
+
+    
+    return $this->response->write(print_r(getUserData($id,$db_con)));
+    // return $this->response->withJson(json_encode(getUserData($id,$db_con)));
     
 });
 

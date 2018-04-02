@@ -3,18 +3,16 @@ var divName = document.querySelector('div.name');
 var img = document.querySelector('img');
 
 
+
 document.addEventListener('deviceready', function () {
-    
     loadInfo();
+    // $('#profile_button').click(loadProfile);
+    // $('#passwd_button').click(loadPasswdScreen);
+
 });
 
 function loadInfo (){
-    // var info = {
-    //     'id' : sessionStorage['id'] ,
-    // };
-    // document.querySelector('h1.teste').textContent = sessionStorage['id'];
-    // console.log(sessionStorage['email']);
-    $('.dropdown-trigger').dropdown();
+    // $('.dropdown-trigger').dropdown();
     $.ajaxSetup({
         headers: {
             // 'Content-Type': 'application/json',
@@ -24,7 +22,7 @@ function loadInfo (){
     var url = 'http://localhost:8080/home/' + sessionStorage['id'] ;
     // var url = 'http://172.16.50.119:8080/home/' + sessionStorage['id'] ;
     // var url = 'http://localhost:8080/home/' ;
-    console.log(url);
+    // console.log(url);
     $.get(url, function (data){
         // console.log("oi");
         // console.log(JSON.parse(data)['message']);
@@ -37,3 +35,11 @@ function loadInfo (){
     });
     
 }
+
+// function loadProfile(){
+//     console.log("Olá");
+// }
+
+// function loadPasswdScreen(){
+//     console.log("tchau!");
+// }

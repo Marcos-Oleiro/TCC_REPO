@@ -1,18 +1,14 @@
 var divPhoto = document.querySelector('div.photo');
 var divName = document.querySelector('div.name');
+var divDesc = document.querySelector('#desc');
 var img = document.querySelector('img');
 
-
-
-document.addEventListener('deviceready', function () {
+document.addEventListener('deviceready', function (){
     loadInfo();
-    // $('#profile_button').click(loadProfile);
-    // $('#passwd_button').click(loadPasswdScreen);
-
 });
 
 function loadInfo (){
-    // $('.dropdown-trigger').dropdown();
+    $('.dropdown-trigger').dropdown();
     $.ajaxSetup({
         headers: {
             // 'Content-Type': 'application/json',
@@ -31,15 +27,15 @@ function loadInfo (){
             img.src = "../img/icon_profile5.png";
             // img.src = "../img/gohan.jpeg";
         }
+        if (JSON.parse(data)['description'] != null) {
+            document.querySelector('#desc_text').value = JSON.parse(data)['description'];
+            // document.getElementsByName('desc_text').value = JSON.parse(data)['description'];
+        }
+        document.getElementsByName('desc_text').value = JSON.parse(data)['description'];
+        // divDesc.textContent = JSON.parse(data)['description'];
+        // $('#desc_text').val(JSON.parse(data)['description']);
         divName.textContent = JSON.parse(data)['nickname'];
+        
     });
     
 }
-
-// function loadProfile(){
-//     console.log("Olá");
-// }
-
-// function loadPasswdScreen(){
-//     console.log("tchau!");
-// }

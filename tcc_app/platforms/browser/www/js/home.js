@@ -25,10 +25,11 @@ function loadInfo (){
     // console.log(url);
     $.get(url, function (data){
         // console.log("oi");
-        // console.log(JSON.parse(data)['message']);
-        // console.log(JSON.parse(data)['nickname']);
+        sessionStorage.setItem('desc',(JSON.parse(data)['description']));
+        sessionStorage.setItem('nickname',(JSON.parse(data)['nickname']));
         if (JSON.parse(data)['photography'] === null){
             img.src = "../img/icon_profile5.png";
+        
             // img.src = "../img/gohan.jpeg";
         }
         divName.textContent = JSON.parse(data)['nickname'];

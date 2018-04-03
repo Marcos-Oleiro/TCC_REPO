@@ -4,38 +4,10 @@ var divDesc = document.querySelector('#desc');
 var img = document.querySelector('img');
 
 document.addEventListener('deviceready', function (){
-    loadInfo();
-});
-
-function loadInfo (){
-    $('.dropdown-trigger').dropdown();
-    $.ajaxSetup({
-        headers: {
-            // 'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-    });
-    var url = 'http://localhost:8080/home/' + sessionStorage['id'] ;
-    // var url = 'http://172.16.50.119:8080/home/' + sessionStorage['id'] ;
-    // var url = 'http://localhost:8080/home/' ;
-    // console.log(url);
-    $.get(url, function (data){
-        // console.log("oi");
-        // console.log(JSON.parse(data)['message']);
-        // console.log(JSON.parse(data)['nickname']);
-        if (JSON.parse(data)['photography'] === null){
-            img.src = "../img/icon_profile5.png";
-            // img.src = "../img/gohan.jpeg";
-        }
-        if (JSON.parse(data)['description'] != null) {
-            document.querySelector('#desc_text').value = JSON.parse(data)['description'];
-            // document.getElementsByName('desc_text').value = JSON.parse(data)['description'];
-        }
-        document.getElementsByName('desc_text').value = JSON.parse(data)['description'];
-        // divDesc.textContent = JSON.parse(data)['description'];
-        // $('#desc_text').val(JSON.parse(data)['description']);
-        divName.textContent = JSON.parse(data)['nickname'];
-        
-    });
     
-}
+    divName.textContent = sessionStorage['nickname'];
+    console.log(sessionStorage['desc']);
+    document.querySelector('#desc_text').value = sessionStorage['desc'];
+    img.src = "../img/icon_profile5.png";
+    
+});

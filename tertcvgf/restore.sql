@@ -1,4 +1,11 @@
 --
+-- NOTE:
+--
+-- File paths need to be edited. Search for $$PATH$$ and
+-- replace it with the path to the directory containing
+-- the extracted data files.
+--
+--
 -- PostgreSQL database dump
 --
 
@@ -14,6 +21,44 @@ SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
+
+ALTER TABLE ONLY public.user_game DROP CONSTRAINT user_game_id_user_fkey;
+ALTER TABLE ONLY public.user_game DROP CONSTRAINT user_game_id_game_fkey;
+ALTER TABLE ONLY public.connections DROP CONSTRAINT connections_id_user2_fkey;
+ALTER TABLE ONLY public.connections DROP CONSTRAINT connections_id_user1_fkey;
+ALTER TABLE ONLY public.users DROP CONSTRAINT users_pkey;
+ALTER TABLE ONLY public.user_game DROP CONSTRAINT user_game_pkey;
+ALTER TABLE ONLY public.games DROP CONSTRAINT games_pkey;
+ALTER TABLE ONLY public.connections DROP CONSTRAINT connections_pkey;
+ALTER TABLE public.users ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.user_game ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.games ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.connections ALTER COLUMN id DROP DEFAULT;
+DROP SEQUENCE public.users_id_seq;
+DROP TABLE public.users;
+DROP SEQUENCE public.user_game_id_seq;
+DROP TABLE public.user_game;
+DROP SEQUENCE public.games_id_seq;
+DROP TABLE public.games;
+DROP SEQUENCE public.connections_id_seq;
+DROP TABLE public.connections;
+DROP EXTENSION plpgsql;
+DROP SCHEMA public;
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA public;
+
+
+ALTER SCHEMA public OWNER TO postgres;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
 
 --
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
@@ -157,7 +202,6 @@ CREATE TABLE public.users (
 );
 
 
-
 ALTER TABLE public.users OWNER TO postgres;
 
 --
@@ -216,18 +260,15 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 COPY public.connections (id, id_user1, id_user2, status) FROM stdin;
 \.
-
+COPY public.connections (id, id_user1, id_user2, status) FROM '$$PATH$$/2189.dat';
 
 --
 -- Data for Name: games; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.games (id, name, photo) FROM stdin;
-1	jogo1	\N
-2	jogo2	\N
-3	jogo3	\N
 \.
-
+COPY public.games (id, name, photo) FROM '$$PATH$$/2187.dat';
 
 --
 -- Data for Name: user_game; Type: TABLE DATA; Schema: public; Owner: postgres
@@ -235,16 +276,15 @@ COPY public.games (id, name, photo) FROM stdin;
 
 COPY public.user_game (id, id_user, id_game) FROM stdin;
 \.
-
+COPY public.user_game (id, id_user, id_game) FROM '$$PATH$$/2191.dat';
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.users (id, nickname, birthday, passwd, email, rep, description, photo, longitude, latitude) FROM stdin;
-14	spellzito	\N	d3d26f1e61ff157eb2e41f7ef2f6f47f3e67164e440eb27cfe2ee3a3d7e3cd69	spellzito@oleirosoftware.com.br	\N	\N	\N	\N	\N
+COPY public.users (id, nickname, birthday, passwd, email, rep, description, longitude, latitude, photography) FROM stdin;
 \.
-
+COPY public.users (id, nickname, birthday, passwd, email, rep, description, longitude, latitude, photography) FROM '$$PATH$$/2185.dat';
 
 --
 -- Name: connections_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres

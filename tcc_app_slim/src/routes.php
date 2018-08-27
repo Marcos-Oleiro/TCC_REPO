@@ -133,7 +133,10 @@ $app->post('/login', function (Request $request, Response $response, array $args
             // return $this->response->withJson($db_data);
             $answer['message'] = $db_data;
             $json = json_encode($answer);
-            logIn(); // "Setando" o valor na session como logado
+            // logIn(); // "Setando" o valor na session como logado
+            $_SESSION['logged'] = true;
+
+            // die();
             return $this->response->withJson($json);
         }
         else{
@@ -164,18 +167,26 @@ $app->get('/home/{id}', function (Request $request, Response $response, array $a
     
 });
 
-// retorna as informações  necessárias do usuário com a id informada.
-$app->get('/profile/{id}', function (Request $request, Response $response, array $args ) {
+$app->put('/profile/edit/desc',function(Request $request, Response $response, array $args) {
 
-    $id = intval($args['id']);
-
-    // conexão do banco
+    // $new_desc = $this->request->getParsedBody()['new_desc'];
     $db_con = $this->db;
+    $_SESSION['logged'] = true;
+
+    // if (isLogged()) {
+        
+        updateDescription($this->request->getParsedBody()['id'],$this->request->getParsedBody()['new_desc'], $db_con);
+
+    // }
+    // else{
+        
+    // }
+  
+ 
 
     
-    return $this->response->write(print_r(getUserData($id,$db_con)));
-    // return $this->response->withJson(json_encode(getUserData($id,$db_con)));
-    
+    return $this->response->write(print_r($this->request->getParsedBody()));
+    // return $this->response->write(updateDescription($id_user,$new_desc, $db_con));
 });
 
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {

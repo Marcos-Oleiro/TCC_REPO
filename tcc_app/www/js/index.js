@@ -56,11 +56,7 @@ function SendLoginForm () {
                 }
             });
             var myJSON = JSON.stringify(login_info);
-            // console.log(myJSON);
-            // window.location = "https://www.google.com" // testando o redirecionamento se os campos tiverem ok
             var url = "http://localhost:8080/login";
-            // var url = "http://172.16.50.119:8080/login";
-            // console.log(url);
             $.post(url, myJSON,function(data){
                 console.log(JSON.parse(data)['message']);
                 if ( Number.isInteger(JSON.parse(data)['message'])  ){

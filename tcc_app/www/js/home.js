@@ -32,6 +32,7 @@ function loadInfo (){
         
             // img.src = "../img/gohan.jpeg";
         }
+        
         divName.textContent = JSON.parse(data)['nickname'];
     });
     

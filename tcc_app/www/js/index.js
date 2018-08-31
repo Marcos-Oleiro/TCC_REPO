@@ -52,22 +52,27 @@ function SendLoginForm () {
             $.ajaxSetup({
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    // 'Accept': ['application/json','text/javascript']
+                    'Accept': 'text/plain; charset=utf-8'
                 }
             });
             var myJSON = JSON.stringify(login_info);
             var url = "http://localhost:8080/login";
-            $.post(url, myJSON,function(data){
-                console.log(JSON.parse(data)['message']);
-                if ( Number.isInteger(JSON.parse(data)['message'])  ){
-                    sessionStorage.setItem('id', JSON.parse(data)['message']);
-                    // console.log(sessionStorage['id']);
-                    window.location = "html/home.html";
-                }
-                else{
-                    divEmail.textContent = JSON.parse(data)['message'];
+            $.post(url, myJSON,function(data,textsatus,jqxhr){
+                console.log(jqxhr.status);
+                console.log(textsatus);
+                console.log(jqxhr.getResponseHeader('id'));
+                // console.log(xhr.status);
+                // console.log(JSON.parse(data)['message']);
+                // if ( Number.isInteger(JSON.parse(data)['message'])  ){
+                //     sessionStorage.setItem('id', JSON.parse(data)['message']);
+                //     // console.log(sessionStorage['id']);
+                //     window.location = "html/home.html";
+                // }
+                // else{
+                //     divEmail.textContent = JSON.parse(data)['message'];
 
-                }
+                // }
             });       
             event.preventDefault();
         }

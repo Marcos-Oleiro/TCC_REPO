@@ -52,26 +52,27 @@ function SendLoginForm () {
             $.ajaxSetup({
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    // 'Accept': ['application/json','text/javascript']
+                    'Accept': 'text/plain; charset=utf-8'
                 }
             });
             var myJSON = JSON.stringify(login_info);
-            // console.log(myJSON);
-            // window.location = "https://www.google.com" // testando o redirecionamento se os campos tiverem ok
             var url = "http://localhost:8080/login";
-            // var url = "http://172.16.50.119:8080/login";
-            // console.log(url);
-            $.post(url, myJSON,function(data){
-                console.log(JSON.parse(data)['message']);
-                if ( Number.isInteger(JSON.parse(data)['message'])  ){
-                    sessionStorage.setItem('id', JSON.parse(data)['message']);
-                    // console.log(sessionStorage['id']);
-                    window.location = "html/home.html";
-                }
-                else{
-                    divEmail.textContent = JSON.parse(data)['message'];
+            $.post(url, myJSON,function(data,textsatus,jqxhr){
+                console.log(jqxhr.status);
+                console.log(textsatus);
+                console.log(jqxhr.getResponseHeader('id'));
+                // console.log(xhr.status);
+                // console.log(JSON.parse(data)['message']);
+                // if ( Number.isInteger(JSON.parse(data)['message'])  ){
+                //     sessionStorage.setItem('id', JSON.parse(data)['message']);
+                //     // console.log(sessionStorage['id']);
+                //     window.location = "html/home.html";
+                // }
+                // else{
+                //     divEmail.textContent = JSON.parse(data)['message'];
 
-                }
+                // }
             });       
             event.preventDefault();
         }

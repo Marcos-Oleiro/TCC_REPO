@@ -137,7 +137,12 @@ $app->post('/login', function (Request $request, Response $response, array $args
             $_SESSION['logged'] = true;
 
             // die();
-            return $this->response->withJson($json);
+            // return $this->response->withJson($json);
+            $newresponse = $this->response->withAddedHeader('id',$db_data);
+            echo $db_data."\n";
+            echo $newresponse->getHeader('id');
+            return $newresponse->withStatus(200);
+            // return $this->response->write("oi");
         }
         else{
             // return $this->response->write("Campos Errados");

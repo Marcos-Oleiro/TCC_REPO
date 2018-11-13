@@ -16,4 +16,7 @@ return [
             'level' => \Monolog\Logger::DEBUG,
         ],
     ],
+    "jwt" => [
+        'secret' => 'palavrasupersecretaedificildeadvinhar'
+    ]
 ];

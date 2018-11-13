@@ -143,7 +143,7 @@ $app->post('/users', function (Request $request, Response $response, array $args
 //             echo $db_data."\n";
 //             echo $newresponse->getHeader('id');
 //             return $newresponse->withStatus(200);
-//             // return $this->response->write("oi");
+//             return $this->response->write("oi");
 //         }
 //         else{
 //             // return $this->response->write("Campos Errados");
@@ -165,14 +165,15 @@ $app->post('/users', function (Request $request, Response $response, array $args
 
 $app->post('/login', function( Request $request , Response $response, array $args ){
     
-    $db_con = $this->db;
+    // $db_con = $this->db;
     $user_data = $this->request->getParsedBody();
 
     $settings = $this->get('settings');
-    $token = JWT::encode(['id' => '12', 'nickname' => 'marcos'], $settings['jwt']['secret'], "HS256");
+    $token = JWT::encode(['id' => '12', 'nickname' => 'marcos'], $settings['jwt']['secret'], "HS512");
 
-    // return $this->response-withJson(['token' => $token])
-    return $this->response->write($token);
+    // $response = $this->$response->withAddedHeader('token',$token);
+    return $response->withJson(["token" => $token]);
+    
 });
 
 

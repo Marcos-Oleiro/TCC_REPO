@@ -16,6 +16,8 @@ $app->add(function ($req, $res, $next) {
 
 $app->add(new Tuupola\Middleware\JwtAuthentication([
     "path" => "/api",
-    "secret" => "palavrasupersecretaedificildeadvinhar",
-    "relaxed" => ["localhost"]
+    // "secret" => "teste",
+    "relaxed" => ["localhost"],    
+    "algorithm" => "HS512"
 ]));
+

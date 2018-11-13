@@ -17,6 +17,6 @@ return [
         ],
     ],
     "jwt" => [
-        'secret' => 'palavrasupersecretaedificildeadvinhar'
+        'secret' => 'teste'
     ]
 ];

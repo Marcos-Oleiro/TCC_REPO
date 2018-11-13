@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:900" rel="stylesheet">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection" />
+    <link rel="stylesheet" type="text/css" href="../css/index.css" />
+    <title>Registre-se</title>
+</head>
+
+<body>
+    
+    <div class="content">
+        <center>
+            <img src="../img/logo_oleiro.png" style="width: 43vw;height: auto;">
+            <!-- </center> -->
+            <div class="fields" style="color: red; font-weight: 900"></div>
+            <div class="row">
+                <form class="col s12 centered" id="register_form" action="#" >
+                    <div class="row">
+                        <div class="input-field col s12 ">
+                            <center> Nome de usuário </center>
+                            <input name="nickname" type="text" value="spellzito"/>
+                            <!-- <label for="email" class="active black-text">Email</label> -->
+                        </div>
+                        <div class="mail" style="color: red; font-weight: 900"></div>
+                        <div class="input-field col s12 ">
+                            <center>E-mail</center>
+                            <input name="email" type="email" value="spellzito@oleirosoftware.com.br">
+                            <!-- <label for="email" class="active black-text">Email</label> -->
+                        </div>
+                        <div class="input-field col s12 ">
+                            <center>Senha</center>
+                            <input name="passwd" type="password"  id = "passwd_field" value="1aA9!ss">
+                            <!-- <label for="password" class="active black-text ">Password</label> -->
+                        </div>
+                        <div class="pass" style="color: red; font-weight: 900"></div>
+                        <div class="input-field col s12 ">
+                            <center>Confirme a senha</center>
+                            <input name="passwd_confirm" type="password"  id = "passwd_confirm_field" value="1aA9!ss">
+                            <!-- <label for="password" class="active black-text ">Password</label> -->
+                        </div>
+                    </div>
+                    <button class="btn waves-effect waves-light btn-blue black-text" style="background:whitesmoke" type="submit" name="action" 
+                        id="btn_reg" >Enviar</button>
+                        <!-- <input type="submit" value="Enviar"> -->
+                </form>
+
+            </div>
+
+        </center>
+    </div>
+
+    <script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
+
+    <script type="text/javascript" src="../cordova.js"></script>
+    <script type="text/javascript" src="../js/materialize.min.js"></script>
+    <!-- <script type="text/javascript" src="../js/index.js"></script> -->
+    <!-- <script type="text/javascript" src="../js/lib.js"></script> -->
+    <script type="text/javascript" src="../js/register.js"></script>
+    
+
+
+</body>
+
+</html>

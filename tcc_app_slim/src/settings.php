@@ -17,6 +17,6 @@ return [
         ],
     ],
     "jwt" => [
-        'secret' => 'teste'
+        'secret' => 'kvieug94hge027rgfWh#W3y%&egh67ijg%&*%%hhi5$#t'
     ]
 ];

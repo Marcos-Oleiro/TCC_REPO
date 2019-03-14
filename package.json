@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/Marcos-Oleiro/TCC_REPO#readme",
   "devDependencies": {
-    "cordova": "^8.0.0"
+    "cordova": "^8.1.2"
   }
 }

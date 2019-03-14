@@ -2,9 +2,16 @@
 
 use Slim\Http\Request;
 use Slim\Http\Response;
-use \Firebase\JWT\JWT;
+
 
 require dirname(__FILE__) . '/../libs/AuxFunc.php';
+
+$app->post('/login', function( Request $request , Response $response, array $args ){
+
+    jwtBuilder();
+
+});
+
 
 // Routes
 $app->get('/hello/{name}', function ($request, $response, $args) {
@@ -159,55 +166,6 @@ $app->post('/users', function (Request $request, Response $response, array $args
 //         return $this->response->withJson($json);
 //     }   
 // });
-
-
-// método teste de login utilizando JWT - APAGAR E  MODIFICAR O LOGIN ORIGINAL!!
-
-$app->post('/login', function( Request $request , Response $response, array $args ){
-    
-    // $db_con = $this->db;
-    $user_data = $this->request->getParsedBody();
-
-    $settings = $this->get('settings');
-    $token = JWT::encode(['id' => '12', 'nickname' => 'marcos'], $settings['jwt']['secret'], "HS512");
-
-    // $response = $this->$response->withAddedHeader('token',$token);
-    return $response->withJson(["token" => $token]);
-    
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // retorna as informações  necessárias do usuário com a id informada.
 $app->get('/home/{id}', function (Request $request, Response $response, array $args ) {

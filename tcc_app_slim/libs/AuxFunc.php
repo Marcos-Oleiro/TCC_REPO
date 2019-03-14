@@ -1,5 +1,8 @@
 <?php
 
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Signer\Hmac\Sha512;
+
 // só checa se array tem somente 3 campos e se os campos não estão vazios, retorna false se não tem campos vazios e true se tiver campos vazios
 function checkEmptyFields($user_data){
 
@@ -136,3 +139,51 @@ function getUserData($id, $db_con){
     return $row;
 
 }
+
+function generateTokenId (){
+
+}
+
+function jwtBuilder (){
+
+
+
+    $signer = new Sha512();
+
+    $token = (new Builder())->setIssuer('http://oleirosoftware.com') // Configures the issuer (iss claim)
+                        ->setAudience('http://oleirosoftware.org') // Configures the audience (aud claim)
+                        ->setIssuedAt(time()) // Configures the time that the token was issued (iat claim)
+                        ->setExpiration(time() + 3600) // Configures the expiration time of the token (exp claim)
+                        ->setSubject(10)
+                        ->sign($signer, $_ENV["JWT_KEY"]) // creates a signature using "testing" as key
+                        ->getToken(); // Retrieves the generated token
+
+
+    // print_r($token->getHeaders()); // Retrieves the token headers
+    print_r($token); // Retrieves the token headers
+    // $token->getClaims(); // Retrieves the token claims
+
+
+    // echo ('Issuer Claim : ' . $token->getClaim('iss')) . PHP_EOL;
+    // echo ('Aud Clam : ' . $token->getClaim('aud')) . PHP_EOL;
+    // echo ('Sub Clam : ' . $token->getClaim('sub')) . PHP_EOL;
+    // echo "Gerado em: " .date('d/M/Y H:i:s',$token->getClaim('iat'))."\n";    
+    // echo "Expira em: " .date('d/M/Y H:i:s',$token->getClaim('exp'))."\n";
+    
+
+    // srand(random_int (PHP_INT_MIN,PHP_INT_MAX)/time());
+    // echo rand();
+    // echo dechex(rand());
+    // echo base64_encode(random_int (PHP_INT_MIN,PHP_INT_MAX)/time());
+
+    // print_r($token);
+    // echo $_ENV["JWT_KEY"];
+    // var_dump($token->verify($signer, $_ENV["JWT_KEY"]));
+    // var_dump($token->verify($signer, 'blsblsblsbls'));
+ }
+
+ /*
+    Um token é gerado para durar 3 horas (?)
+    O token pode ser renovado (como?)
+    Fazer uma função que possa invalidar o token quando o cliente solicitar (como?)
+ */

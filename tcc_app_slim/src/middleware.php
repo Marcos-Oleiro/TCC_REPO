@@ -14,10 +14,5 @@ $app->add(function ($req, $res, $next) {
             ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 });
 
-$app->add(new Tuupola\Middleware\JwtAuthentication([
-    "path" => "/api",
-    // "secret" => "teste",
-    "relaxed" => ["localhost"],    
-    "algorithm" => "HS512"
-]));
+
 

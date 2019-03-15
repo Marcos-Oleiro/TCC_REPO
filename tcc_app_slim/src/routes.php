@@ -6,11 +6,15 @@ use Slim\Http\Response;
 
 require dirname(__FILE__) . '/../libs/AuxFunc.php';
 
-$app->post('/login', function( Request $request , Response $response, array $args ){
+// $app->post('/login', function( Request $request , Response $response, array $args ){
 
-    jwtBuilder();
+//     $token = jwtBuilder();
+//     // echo $token;die();
+    
+//     $response = $response->withHeader('teste','teste1');
+//     return $response->write($token);
 
-});
+// });
 
 
 // Routes
@@ -116,56 +120,58 @@ $app->post('/users', function (Request $request, Response $response, array $args
 });
 
 // método para validar os dados de login do usuário
-// $app->post('/login', function (Request $request, Response $response, array $args) {
+$app->post('/login', function (Request $request, Response $response, array $args) {
 
-//     // a resposta deve ir para o front-end em formna de json, então eu faço um array e o transformo em json
-//     $answer = [];
+    // a resposta deve ir para o front-end em formna de json, então eu faço um array e o transformo em json
+    $answer = [];
 
-//     // conexão do banco
-//     $db_con = $this->db;
+    // conexão do banco
+    $db_con = $this->db;
     
-//     // vetor com as informações que vem via formulário
-//     $user_data = $this->request->getParsedBody();
+    // vetor com as informações que vem via formulário
+    $user_data = $this->request->getParsedBody();
 
-//     // inserir um novo item dentro do array para poder utilizar as mesmas funções que foram usadas no formulário de registro.
-//     $user_data['nickname'] = 'nickname';  
+    // inserir um novo item dentro do array para poder utilizar as mesmas funções que foram usadas no formulário de registro.
+    $user_data['nickname'] = 'nickname';  
 
-//     // verifique se os campos estão vazios
-//     if ( !checkEmptyFields($user_data) ) {
+    // verifique se os campos estão vazios
+    if ( !checkEmptyFields($user_data) ) {
 
-//         // verifica se os dados vieram com os campos necessários
-//         if (testFieldsNames($user_data)){
-//             // return $this->response->write("Campos OK");
-//             // return $this->response->write(checkUser($user_data['email'],dbPass($user_data['passwd']),$db_con));
-//             $db_data = checkUser($user_data['email'],dbPass($user_data['passwd']),$db_con);
-//             // return $this->response->withJson($db_data);
-//             $answer['message'] = $db_data;
-//             $json = json_encode($answer);
-//             // logIn(); // "Setando" o valor na session como logado
-//             $_SESSION['logged'] = true;
+        // verifica se os dados vieram com os campos necessários
+        if (testFieldsNames($user_data)){
+            // return $this->response->write("Campos OK");
+            // return $this->response->write(checkUser($user_data['email'],dbPass($user_data['passwd']),$db_con));
+            $db_data = checkUser($user_data['email'],dbPass($user_data['passwd']),$db_con);
+            
+            $token = jwtBuilder($db_data);
+            
+            $response = $response->withHeader('id',idEncryptor($db_data));
 
-//             // die();
-//             // return $this->response->withJson($json);
-//             $newresponse = $this->response->withAddedHeader('id',$db_data);
-//             echo $db_data."\n";
-//             echo $newresponse->getHeader('id');
-//             return $newresponse->withStatus(200);
-//             return $this->response->write("oi");
-//         }
-//         else{
-//             // return $this->response->write("Campos Errados");
-//             $answer['message'] = 'Campos Incorretos';
-//             $json = json_encode($answer);
-//             return $this->response->withJson($json);
-//         }
-//     }
-//     else{
-//         // return $this->response->write("Campos vazios");
-//         $answer['message'] = 'Informação incorreta';
-//         $json = json_encode($answer);
-//         return $this->response->withJson($json);
-//     }   
-// });
+            $message = array (
+                'token' => $token
+            );
+            
+
+            echo ($message['token']).PHP_EOL;
+            echo (json_encode($message));
+            die();
+            // return $this->$response->withJson(json_encode($message));
+            // return $response->withStatus(200);
+        }
+        else{
+            // return $this->response->write("Campos Errados");
+            $answer['message'] = 'Campos Incorretos';
+            $json = json_encode($answer); 
+            return $this->response->withJson($json);
+        }
+    }
+    else{
+        // return $this->response->write("Campos vazios");
+        $answer['message'] = 'Informação incorreta';
+        $json = json_encode($answer);
+        return $this->response->withJson($json);
+    }   
+});
 
 // retorna as informações  necessárias do usuário com a id informada.
 $app->get('/home/{id}', function (Request $request, Response $response, array $args ) {

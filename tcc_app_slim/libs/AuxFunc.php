@@ -93,8 +93,28 @@ function saveNewUser ($nickname, $email, $passwd, $db_con){
 function dbPass ($passwd) {
     return hash('sha256',$passwd . 'nirvana' );
 }
+
+// função que transforma a id do usuário para base64 ⁽concatenada com uma string), para ser enviada para o cliente
+function idEncryptor($id) {
+    return base64_encode($id.'teste');
+
+}
+// função que pega a id, em base 64, e devolve a id "limpa" para processamento
+function idDecryptor($str){
+
+    $str_crpt = base64_decode($str);
+
+    // tamanho da string segredo utilizada para criar a string em base64
+    // quando for pro servidor, utilizar variável de ambiente (?) e pegar o seu tamanho
+    // MUDAR PARA VARIÁVEL DE AMBIENTE DEPOIS!!!!
+    $size_secret = 5;
+    // -----------------------------------
+        
+    return substr( $str_crpt , 0 , (strlen($str_crpt)) - $size_secret );
+    
+}
 // função que verifica as credenciais do usuário
-function checkUser ($email, $passwd, $db_con) {
+function checkUser ($email, $passwd, $db_con) { 
 
     $stmt = $db_con->prepare("SELECT * FROM users WHERE email = :email");
     $stmt->bindParam(':email' , $email);
@@ -118,16 +138,16 @@ function checkUser ($email, $passwd, $db_con) {
 
 }
 
-function logIn(){
-    $_SESSION['logged'] = true;
-}
-function logOff(){
-    $_SESSION['logged'] = false;
-}
+// function logIn(){
+//     $_SESSION['logged'] = true;
+// }
+// function logOff(){
+//     $_SESSION['logged'] = false;
+// }
 
-function isLogged(){
-    return $_SESSION['logged'];
-}
+// function isLogged(){
+//     return $_SESSION['logged'];
+// }
 
 function getUserData($id, $db_con){
 
@@ -140,11 +160,7 @@ function getUserData($id, $db_con){
 
 }
 
-function generateTokenId (){
-
-}
-
-function jwtBuilder (){
+function jwtBuilder ($user_id){
 
 
 
@@ -154,13 +170,13 @@ function jwtBuilder (){
                         ->setAudience('http://oleirosoftware.org') // Configures the audience (aud claim)
                         ->setIssuedAt(time()) // Configures the time that the token was issued (iat claim)
                         ->setExpiration(time() + 3600) // Configures the expiration time of the token (exp claim)
-                        ->setSubject(10)
+                        ->setSubject($user_id)
                         ->sign($signer, $_ENV["JWT_KEY"]) // creates a signature using "testing" as key
                         ->getToken(); // Retrieves the generated token
 
 
     // print_r($token->getHeaders()); // Retrieves the token headers
-    print_r($token); // Retrieves the token headers
+    // print_r($token); // Retrieves the token headers
     // $token->getClaims(); // Retrieves the token claims
 
 
@@ -180,6 +196,7 @@ function jwtBuilder (){
     // echo $_ENV["JWT_KEY"];
     // var_dump($token->verify($signer, $_ENV["JWT_KEY"]));
     // var_dump($token->verify($signer, 'blsblsblsbls'));
+    return $token;
  }
 
  /*

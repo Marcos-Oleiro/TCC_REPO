@@ -58,21 +58,27 @@ function SendLoginForm () {
             });
             var myJSON = JSON.stringify(login_info);
             var url = "http://localhost:8080/login";
-            $.post(url, myJSON,function(data,textsatus,jqxhr){
-                console.log(jqxhr.status);
-                console.log(textsatus);
-                console.log(jqxhr.getResponseHeader('id'));
-                // console.log(xhr.status);
-                // console.log(JSON.parse(data)['message']);
-                // if ( Number.isInteger(JSON.parse(data)['message'])  ){
-                //     sessionStorage.setItem('id', JSON.parse(data)['message']);
-                //     // console.log(sessionStorage['id']);
-                //     window.location = "html/home.html";
-                // }
-                // else{
-                //     divEmail.textContent = JSON.parse(data)['message'];
+            $.post(url, myJSON,function(data,textsatus,xhr){
+                console.log(data);
+                
 
-                // }
+                // console.log();                
+                // console.log(xhr.getResponseHeader('id'));
+                // console.log();
+                // console.log(xhr.status);
+                // sessionStorage.setItem('id', xhr.getResponseHeader('id'));
+                sessionStorage.setItem('id',1);
+                // console.log(sessionStorage['id']);
+                // window.location = "html/home.html";
+                // teste do http code
+                httpCode = xhr.status;
+                if ( httpCode == 200 ) {  
+                    // console.log('http code 200');
+                    // window.location = "html/home.html";
+                }else{
+                    divEmail.textContent = "Os campos devem ser preenchidos corretamente.";
+                    event.preventDefault();
+                }
             });       
             event.preventDefault();
         }

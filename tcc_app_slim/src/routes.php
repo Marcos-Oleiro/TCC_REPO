@@ -145,31 +145,29 @@ $app->post('/login', function (Request $request, Response $response, array $args
             
             $token = jwtBuilder($db_data);
             
-            $response = $response->withHeader('id',idEncryptor($db_data));
-
-            $message = array (
-                'token' => $token
-            );
+            $response = $response->withHeader('id',idEncryptor($db_data))
+                                ->withHeader("Access-Control-Expose-Headers","id");
             
+            //  transformar o objeto token em string para enviar para o cliente
+            $message = array (
+                'token' => (string)$token
+            );
 
-            echo ($message['token']).PHP_EOL;
-            echo (json_encode($message));
-            die();
-            // return $this->$response->withJson(json_encode($message));
-            // return $response->withStatus(200);
+            $str_json = json_encode($message);            
+            // campos verificados, usuário verificado, token gerado
+            // retorna token e http code 200 - OK
+            return  $response->withJson($str_json)->withStatus(200);
         }
         else{
-            // return $this->response->write("Campos Errados");
-            $answer['message'] = 'Campos Incorretos';
-            $json = json_encode($answer); 
-            return $this->response->withJson($json);
+            // request inválida
+            // http code 400 - bad request
+            return $response->withStatus(400);
         }
     }
     else{
-        // return $this->response->write("Campos vazios");
-        $answer['message'] = 'Informação incorreta';
-        $json = json_encode($answer);
-        return $this->response->withJson($json);
+        // request inválida
+        // http code 400 - bad request
+        return $response->withStatus(400);
     }   
 });
 
@@ -215,3 +213,4 @@ $app->get('/[{name}]', function (Request $request, Response $response, array $ar
     // Render index view
     return $this->renderer->render($response, 'index.phtml', $args);
 });
+

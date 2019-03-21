@@ -8,7 +8,8 @@ document.addEventListener('deviceready', function () {
     loadInfo();
     // $('#profile_button').click(loadProfile);
     // $('#passwd_button').click(loadPasswdScreen);
-
+    // console.log(sessionStorage.getItem('tkn'));
+    
 });
 
 function loadInfo (){
@@ -16,15 +17,13 @@ function loadInfo (){
     $.ajaxSetup({
         headers: {
             // 'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Authorization' : "Bearer " + sessionStorage.getItem('tkn')
         }
     });
     var url = 'http://localhost:8080/home/' + sessionStorage['id'] ;
-    // var url = 'http://172.16.50.119:8080/home/' + sessionStorage['id'] ;
-    // var url = 'http://localhost:8080/home/' ;
-    // console.log(url);
     $.get(url, function (data){
-        // console.log("oi");
+        
         sessionStorage.setItem('desc',(JSON.parse(data)['description']));
         sessionStorage.setItem('nickname',(JSON.parse(data)['nickname']));
         if (JSON.parse(data)['photography'] === null){

@@ -2,6 +2,7 @@
 
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
+use Lcobucci\JWT\Parser;
 
 // só checa se array tem somente 3 campos e se os campos não estão vazios, retorna false se não tem campos vazios e true se tiver campos vazios
 function checkEmptyFields($user_data){
@@ -52,35 +53,35 @@ function validateReGex ($pattern, $field){
     return (preg_match($pattern, $field));
 }
 
-// Verifica se os campos e-mail e nickname já são cadastrados no banco de dados. Retorna a string 'OK' se nenhum dos campos forem cadastrados no banco de dados. Se ualgum dos dois campos for
-// cadastrado, retorna uma string informando.
-function checkNewUser ($email, $nickname, $db_con){
-
+// Verifica se o campo e-mail já é cadastrado no banco de dados. 
+function checkNewEmail ($email, $db_con){
+    
     $stmt = $db_con->prepare("SELECT * FROM users WHERE email = :email");
     $stmt->bindParam(':email',$email);
     $stmt->execute();
     $row = $stmt->fetch(); // se não for encontrado resultado, o fetch retorna false
 
-    if ( $row != false ) {
-        return "Email já cadastrado";
+    if ( ($row == false) ) {
+        return true; // true indica que o usuário é novo
     }
+    return false;
+}
 
-    $stmt = null;
-    $row = null;
+// Verifica se o campo nickname já é cadastrado no banco de dados. 
+function checkNewNickname($nickname, $db_con) {
 
-
-    // verificar se o nickname já está cadastrado
     $stmt = $db_con->prepare("SELECT * FROM users WHERE nickname = :nickname");
-    $stmt->bindParam(':nickname',$nickname);
+    $stmt->bindParam(':nickname', $nickname);
     $stmt->execute();
     $row = $stmt->fetch(); // se não for encontrado resultado, o fetch retorna false
-    
-    if ( $row != false ) {
-        return "Nome de usuário já castrado.";
+
+    if (($row == false)) {
+        return true; // true indica que o usuário é novo
     }
 
-    return "OK";
+    return false;
 }
+
 // função que salva no banco de dados o usuário recém registrado
 function saveNewUser ($nickname, $email, $passwd, $db_con){
     $stmt = $db_con->prepare ("INSERT INTO users (nickname, email,passwd) VALUES(:nickname,:email,:passwd)");
@@ -169,7 +170,7 @@ function jwtBuilder ($user_id){
     $token = (new Builder())->setIssuer('http://oleirosoftware.com') // Configures the issuer (iss claim)
                         ->setAudience('http://oleirosoftware.org') // Configures the audience (aud claim)
                         ->setIssuedAt(time()) // Configures the time that the token was issued (iat claim)
-                        ->setExpiration(time() + 3600) // Configures the expiration time of the token (exp claim)
+                        // ->setExpiration(time() + 3600) // Configures the expiration time of the token (exp claim)
                         ->setSubject($user_id)
                         ->sign($signer, $_ENV["JWT_KEY"]) // creates a signature using "testing" as key
                         ->getToken(); // Retrieves the generated token
@@ -204,3 +205,13 @@ function jwtBuilder ($user_id){
     O token pode ser renovado (como?)
     Fazer uma função que possa invalidar o token quando o cliente solicitar (como?)
  */
+
+ function validateToken ($str_token){
+
+     $signer = new Sha512();
+     
+    // tranformar a String do token em Obj
+    $token = (new Parser())->parse((string) $str_token);
+    
+    return ($token->verify($signer,$_ENV['JWT_KEY']));
+ }

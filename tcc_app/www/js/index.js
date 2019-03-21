@@ -1,6 +1,8 @@
 var divEmail = document.querySelector('div.email');
 var divPasswd = document.querySelector('div.passwd');
 
+
+
 document.addEventListener('deviceready', function () {
 
     // Função do Jquery - quando o evento submit é realizado, chama a função SendLoginForm
@@ -18,6 +20,8 @@ function SendLoginForm () {
     var pattern_passwd = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,10}$/;
     // Final da declaração das variáveis
 
+    // console.log(form_value.length);
+    // return 0;
     var empty_fields = checkEmptyFormFields(form_value);
     divEmail.textContent = "";
     divPasswd.textContent = "";
@@ -58,23 +62,14 @@ function SendLoginForm () {
             });
             var myJSON = JSON.stringify(login_info);
             var url = "http://localhost:8080/login";
-            $.post(url, myJSON,function(data,textsatus,xhr){
-                console.log(data);
+            $.post(url, myJSON,function(data,xhr){
                 
-
-                // console.log();                
-                // console.log(xhr.getResponseHeader('id'));
-                // console.log();
-                // console.log(xhr.status);
-                // sessionStorage.setItem('id', xhr.getResponseHeader('id'));
-                sessionStorage.setItem('id',1);
-                // console.log(sessionStorage['id']);
-                // window.location = "html/home.html";
                 // teste do http code
                 httpCode = xhr.status;
                 if ( httpCode == 200 ) {  
-                    // console.log('http code 200');
-                    // window.location = "html/home.html";
+                    sessionStorage.setItem('id', xhr.getResponseHeader('id'));
+                    sessionStorage.setItem('tkn',data.split(":")[1].split("}")[0].split("\"")[1])
+                    window.location = "html/home.html";
                 }else{
                     divEmail.textContent = "Os campos devem ser preenchidos corretamente.";
                     event.preventDefault();
@@ -88,22 +83,6 @@ function SendLoginForm () {
         divEmail.textContent = "Os campos devem ser preenchidos";
         event.preventDefault();
     }
-    // event.preventDefault();
+    event.preventDefault();
 
-}
-
-// verifica se há algum campo no formulário vazio, retorna true se houve campo vazio
-function checkEmptyFormFields(form_value) {
-
-    if ((form_value[0].value.trim().length == 0) || (form_value[1].value.trim().length == 0) ) {
-        return true;
-    }
-    return false;
-}
-
-
-// verifica o campo de acordo com a regex informada
-function verifyField(pattern, field_name) {
-    var reg = new RegExp(pattern);
-    return reg.test(field_name);
 }

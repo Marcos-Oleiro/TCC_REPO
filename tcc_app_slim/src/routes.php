@@ -3,19 +3,7 @@
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-
 require dirname(__FILE__) . '/../libs/AuxFunc.php';
-
-// $app->post('/login', function( Request $request , Response $response, array $args ){
-
-//     $token = jwtBuilder();
-//     // echo $token;die();
-    
-//     $response = $response->withHeader('teste','teste1');
-//     return $response->write($token);
-
-// });
-
 
 // Routes
 $app->get('/hello/{name}', function ($request, $response, $args) {
@@ -40,7 +28,6 @@ $app->get('/games', function (Request $request, Response $response, array $args)
 // método para adicionar usuários ao banco de dados  (Registro de novos usuários)
 $app->post('/users', function (Request $request, Response $response, array $args) { 
 
-
     // a resposta deve ir para o front-end em formna de json, então eu faço um array e o transformo em json
     $answer = [];
     // conexão do banco
@@ -50,6 +37,11 @@ $app->post('/users', function (Request $request, Response $response, array $args
     $user_data = $this->request->getParsedBody();
     // return $this->response->withJson($this->request->getParsedBody());
 
+    $response = $response->withHeader(
+        'Content-type',
+        'application/json; charset=utf-8'
+    );
+        
     // verifique se os campos estão vazios
     if ( !checkEmptyFields ($user_data) ) {
 
@@ -57,65 +49,47 @@ $app->post('/users', function (Request $request, Response $response, array $args
         if (testFieldsNames($user_data)){
 
             if (!validateNickname($user_data['nickname'])){ // se o nickname não passar no teste, vai entrar nesse if
-                // Fazer retorno, informando o erro
-                $answer['message'] = "O nome de usuário não é válido";
-                $json = json_encode($answer);
-                return $this->response->withJson($json);
-                // return $this->response->write("O nome de usuário não é válido");
+                
+                return $response->withStatus(400);
             }
             elseif (!validateEmail($user_data['email'])){ // se o email não passar no teste, vai entrar nesse if
-                // Fazer retorno, informando o erro
-                $answer['message'] = "O e-mail não é válido";
-                $json = json_encode($answer);
-                return $this->response->withJson($json);
-                // return $this->response->write("O e-mail não é válido");
+
+                return $response->withStatus(400);
             }
             elseif(!validatePasswd($user_data['passwd'])){ // se o passwd não passar no teste, vai entrar nesse if
-                // Fazer retorno, informando o erro
-                $answer['message'] = "O senha não é válida";
-                $json = json_encode($answer);
-                return $this->response->withJson($json);
-                // return $this->response->write("A senha não é válida");
+                
+                return $response->withStatus(400);
             }
             else{ // se passar em todos os testes, entra aqui
-                // Se passar em todos os testes, é necessário  verificar se o email e o nickname já estão cadastados
-                $new_user_return = checkNewUser($user_data['email'],$user_data['nickname'],$db_con);
+                               
+                if ( !checkNewEmail ($user_data['email'], $db_con)){
+
+                    $msg = array (
+                       "erro" => "Email já cadastrado, favor escolher outro."
+                    );
+                    // return $response->withJson(json_encode($msg), 400);
+                    return $response->withJson(json_encode($msg));
+                }
+                if ( !checkNewNickname ($user_data['nickname'], $db_con)){
+                    
+                    $msg = array (
+                        "erro" => "Nickname já cadastrado, favor escolher outro."
+                    );
+                    // return $response->withJson(json_encode($msg), 400);
+                    return $response->withJson(json_encode($msg));
+                }
                 
-                if ( $new_user_return == "OK") { // se o nickname e email já não estiver cadastrado, entra nesse IF. Aqui é feita a inserção no banco de dados.
-                    // $stringPass = "nirvana"; 
-                    $user_data['passwd'] = dbPass($user_data['passwd']);
-                    saveNewUser($user_data['nickname'],$user_data['email'],$user_data['passwd'],$db_con);
-                    $answer['message'] = "Salvou";
-                    $json = json_encode($answer);
-                    logIn(); // "Setando" o valor na session como logado
-                    return $this->response->withJson($json);
-                    // return $this->response->write("Salvou");
-                }
-                else{ // email e/ou nickname já cadastrados
-                    // retornar a mensagem de erro.
-                    $answer['message'] = "Nome de usuário e/ou e-mail já cadastrados";
-                    $json = json_encode($answer);
-                    return $this->response->withJson($json);
-                    // return $this->response->write("Nome de usuário e/ou e-mail já cadastrados");
-                }
+                $user_data['passwd'] = dbPass($user_data['passwd']);
+                saveNewUser($user_data['nickname'],$user_data['email'],$user_data['passwd'],$db_con);
+
             }
         }
         else{
-            // campos com nomes errados
-            // Fazer retorno, informando o erro
-            $answer['message'] = "Erro nas informações";
-            $json = json_encode($answer);
-            return $this->response->withJson($json);
-            // return $this->response->write("Erro nas informações");
+            return $response->withStatus(400);
         }
     }
     else{
-        // dados com campos vazios
-        // Fazer retorno, informando o erro
-        $answer['message'] = "Erro nas informações";
-        $json = json_encode($answer);
-        return $this->response->withJson($json);
-        // return $this->response->write("Erro nas informações");
+        return $response->withStatus(400);
     }
 });
 
@@ -174,14 +148,27 @@ $app->post('/login', function (Request $request, Response $response, array $args
 // retorna as informações  necessárias do usuário com a id informada.
 $app->get('/home/{id}', function (Request $request, Response $response, array $args ) {
 
-    $id = intval($args['id']);
-
-    // conexão do banco
-    $db_con = $this->db;
-
+    // pega a id "encriptada" e transformma em ID numérico
+    $id = idDecryptor($args['id']);
     
-    return $this->response->withJson(json_encode(getUserData($id,$db_con)));
+    $tkn_auth = $request->getHeader("HTTP_AUTHORIZATION")[0];
     
+    $auth_type = strtolower(explode(" ", $tkn_auth)[0]);
+
+    // Tipo de autenticação correto
+    if ( strcmp( $auth_type, "bearer") == 0){
+        
+        $str_token = explode(" ", $tkn_auth)[1];
+
+        if ((validateToken($str_token))){
+            
+            // conexão do banco
+            $db_con = $this->db;
+
+            return $response->withJson(json_encode(getUserData($id,$db_con)));   
+        }
+    }
+    return $response->withStatus(401);
 });
 
 $app->put('/profile/edit/desc',function(Request $request, Response $response, array $args) {

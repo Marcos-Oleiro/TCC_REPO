@@ -35,12 +35,6 @@ $app->post('/users', function (Request $request, Response $response, array $args
     
     // vetor com as informações que vem via formulário
     $user_data = $this->request->getParsedBody();
-    // return $this->response->withJson($this->request->getParsedBody());
-
-    $response = $response->withHeader(
-        'Content-type',
-        'application/json; charset=utf-8'
-    );
         
     // verifique se os campos estão vazios
     if ( !checkEmptyFields ($user_data) ) {
@@ -64,24 +58,24 @@ $app->post('/users', function (Request $request, Response $response, array $args
                                
                 if ( !checkNewEmail ($user_data['email'], $db_con)){
 
-                    $msg = array (
-                       "erro" => "Email já cadastrado, favor escolher outro."
-                    );
-                    // return $response->withJson(json_encode($msg), 400);
-                    return $response->withJson(json_encode($msg));
+                    $body = $response->getBody();
+                    
+                    $body->write("Email já cadastrado, favor escolher outro");
+                    
+                    return $response->withStatus(400);
                 }
                 if ( !checkNewNickname ($user_data['nickname'], $db_con)){
                     
-                    $msg = array (
-                        "erro" => "Nickname já cadastrado, favor escolher outro."
-                    );
-                    // return $response->withJson(json_encode($msg), 400);
-                    return $response->withJson(json_encode($msg));
+                    $body = $response->getBody();
+
+                    $body->write("Nickname já cadastrado, favor escolher outro");
+                    
+                    return $response->withStatus(400);
                 }
-                
+
                 $user_data['passwd'] = dbPass($user_data['passwd']);
                 saveNewUser($user_data['nickname'],$user_data['email'],$user_data['passwd'],$db_con);
-
+                return $response->withStatus(200)->write("ok!");  
             }
         }
         else{
@@ -113,24 +107,32 @@ $app->post('/login', function (Request $request, Response $response, array $args
 
         // verifica se os dados vieram com os campos necessários
         if (testFieldsNames($user_data)){
-            // return $this->response->write("Campos OK");
-            // return $this->response->write(checkUser($user_data['email'],dbPass($user_data['passwd']),$db_con));
+            
             $db_data = checkUser($user_data['email'],dbPass($user_data['passwd']),$db_con);
             
             $token = jwtBuilder($db_data);
             
-            $response = $response->withHeader('id',idEncryptor($db_data))
-                                ->withHeader("Access-Control-Expose-Headers","id");
-            
-            //  transformar o objeto token em string para enviar para o cliente
-            $message = array (
-                'token' => (string)$token
-            );
+             if ( is_numeric($db_data)) { // se os dados estiverem corretos
+                 $response = $response->withHeader('id',idEncryptor($db_data))
+                                     ->withHeader("Access-Control-Expose-Headers","id");
+                 
+                 //  transformar o objeto token em string para enviar para o cliente
+                 $message = array (
+                     'token' => (string)$token
+                 );
+     
+                 $str_json = json_encode($message);            
+                 // campos verificados, usuário verificado, token gerado
+                 // retorna token e http code 200 - OK
+                 return  $response->withJson($str_json)->withStatus(200);
 
-            $str_json = json_encode($message);            
-            // campos verificados, usuário verificado, token gerado
-            // retorna token e http code 200 - OK
-            return  $response->withJson($str_json)->withStatus(200);
+             }
+             else{ // dados não batendo com os dados do banco de dados
+                 $body = $response->getBody();
+                 $body->write($db_data);
+                 return $response->withStatus(400);
+                 
+             }
         }
         else{
             // request inválida
@@ -154,18 +156,21 @@ $app->get('/home/{id}', function (Request $request, Response $response, array $a
     $tkn_auth = $request->getHeader("HTTP_AUTHORIZATION")[0];
     
     $auth_type = strtolower(explode(" ", $tkn_auth)[0]);
-
+    
     // Tipo de autenticação correto
     if ( strcmp( $auth_type, "bearer") == 0){
         
         $str_token = explode(" ", $tkn_auth)[1];
-
+        
         if ((validateToken($str_token))){
             
             // conexão do banco
             $db_con = $this->db;
 
             return $response->withJson(json_encode(getUserData($id,$db_con)));   
+        }
+        else{
+            return $response->withStatus(401);
         }
     }
     return $response->withStatus(401);

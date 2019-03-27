@@ -139,17 +139,6 @@ function checkUser ($email, $passwd, $db_con) {
 
 }
 
-// function logIn(){
-//     $_SESSION['logged'] = true;
-// }
-// function logOff(){
-//     $_SESSION['logged'] = false;
-// }
-
-// function isLogged(){
-//     return $_SESSION['logged'];
-// }
-
 function getUserData($id, $db_con){
 
     $stmt = $db_con->prepare("SELECT photography, nickname, description FROM users WHERE id = :id");

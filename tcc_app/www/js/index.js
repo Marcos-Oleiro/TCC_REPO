@@ -56,30 +56,26 @@ function SendLoginForm () {
             $.ajaxSetup({
                 headers: {
                     'Content-Type': 'application/json',
-                    // 'Accept': ['application/json','text/javascript']
-                    'Accept': 'text/plain; charset=utf-8'
+                    'Accept': ['application/json','text/javascript']
                 }
             });
             var myJSON = JSON.stringify(login_info);
             var url = "http://localhost:8080/login";
-            $.post(url, myJSON,function(data,xhr){
+            let jxhr = $.post(url, myJSON)
+            .done(function (data) {
+                sessionStorage.setItem('id', jxhr.getResponseHeader('id'));
+                sessionStorage.setItem('tkn', data.split(":")[1].split("}")[0].split("\"")[1])
+                window.location = "html/home.html";
+            })
+            .fail ( function (data) {
                 
-                // teste do http code
-                httpCode = xhr.status;
-                if ( httpCode == 200 ) {  
-                    sessionStorage.setItem('id', xhr.getResponseHeader('id'));
-                    sessionStorage.setItem('tkn',data.split(":")[1].split("}")[0].split("\"")[1])
-                    window.location = "html/home.html";
-                }else{
-                    divEmail.textContent = "Os campos devem ser preenchidos corretamente.";
-                    event.preventDefault();
-                }
-            });       
+                divEmail.textContent = jxhr.responseText;
+                event.preventDefault();
+            })
             event.preventDefault();
         }
     }
     else{ // Campos Vazios
-        // console.log("Campos Vazios");
         divEmail.textContent = "Os campos devem ser preenchidos";
         event.preventDefault();
     }

@@ -129,12 +129,12 @@ function checkUser ($email, $passwd, $db_con) {
             return $row['id'];
         }
         else{
-            return 'E-mail ou Senha incorretos';
+            return 'Senha incorreta';
         }
         
     }
     else {
-        return 'Dados não cadastrados';
+        return 'E-mail ou Senha incorretos';
     }
 
 }
@@ -152,8 +152,6 @@ function getUserData($id, $db_con){
 
 function jwtBuilder ($user_id){
 
-
-
     $signer = new Sha512();
 
     $token = (new Builder())->setIssuer('http://oleirosoftware.com') // Configures the issuer (iss claim)
@@ -161,46 +159,40 @@ function jwtBuilder ($user_id){
                         ->setIssuedAt(time()) // Configures the time that the token was issued (iat claim)
                         // ->setExpiration(time() + 3600) // Configures the expiration time of the token (exp claim)
                         ->setSubject($user_id)
+                        ->set('valid',true)
                         ->sign($signer, $_ENV["JWT_KEY"]) // creates a signature using "testing" as key
                         ->getToken(); // Retrieves the generated token
 
-
-    // print_r($token->getHeaders()); // Retrieves the token headers
-    // print_r($token); // Retrieves the token headers
-    // $token->getClaims(); // Retrieves the token claims
-
-
-    // echo ('Issuer Claim : ' . $token->getClaim('iss')) . PHP_EOL;
-    // echo ('Aud Clam : ' . $token->getClaim('aud')) . PHP_EOL;
-    // echo ('Sub Clam : ' . $token->getClaim('sub')) . PHP_EOL;
-    // echo "Gerado em: " .date('d/M/Y H:i:s',$token->getClaim('iat'))."\n";    
-    // echo "Expira em: " .date('d/M/Y H:i:s',$token->getClaim('exp'))."\n";
-    
-
-    // srand(random_int (PHP_INT_MIN,PHP_INT_MAX)/time());
-    // echo rand();
-    // echo dechex(rand());
-    // echo base64_encode(random_int (PHP_INT_MIN,PHP_INT_MAX)/time());
-
-    // print_r($token);
-    // echo $_ENV["JWT_KEY"];
-    // var_dump($token->verify($signer, $_ENV["JWT_KEY"]));
-    // var_dump($token->verify($signer, 'blsblsblsbls'));
     return $token;
  }
 
- /*
-    Um token é gerado para durar 3 horas (?)
-    O token pode ser renovado (como?)
-    Fazer uma função que possa invalidar o token quando o cliente solicitar (como?)
- */
+ // confere a validade, autenticidade e propriedade do token
+ function validateToken ($str_token, $id){
 
- function validateToken ($str_token){
-
-     $signer = new Sha512();
-     
+    $signer = new Sha512();
+    
     // tranformar a String do token em Obj
     $token = (new Parser())->parse((string) $str_token);
     
-    return ($token->verify($signer,$_ENV['JWT_KEY']));
+    // validar a ID
+    if ( ( (int)$id ) != ( (int)$token->getClaim('sub') ) ) {
+        return false;
+    }
+    // verificar a validade
+    if (!$token->getClaim('valid') ) {
+        return false;
+    }
+
+    // verificar a autenticidade
+    if ( !$token->verify($signer, $_ENV['JWT_KEY']) ) {
+        return false;
+    }
+    
+    return true;
+ }
+
+ function validateAuthType($auth_string){
+
+    $auth_type = strtolower(explode(" ", $auth_string)[0]);
+    return (strcmp($auth_type, "bearer") == 0);
  }

@@ -153,28 +153,59 @@ $app->get('/home/{id}', function (Request $request, Response $response, array $a
     // pega a id "encriptada" e transformma em ID numérico
     $id = idDecryptor($args['id']);
     
+    // MXRlc3Rl
+
     $tkn_auth = $request->getHeader("HTTP_AUTHORIZATION")[0];
     
-    $auth_type = strtolower(explode(" ", $tkn_auth)[0]);
-    
-    // Tipo de autenticação correto
-    if ( strcmp( $auth_type, "bearer") == 0){
-        
+    if (validateAuthType($tkn_auth)){
+
         $str_token = explode(" ", $tkn_auth)[1];
-        
-        if ((validateToken($str_token))){
+
+        if ((validateToken($str_token, $id))) {
             
             // conexão do banco
             $db_con = $this->db;
 
-            return $response->withJson(json_encode(getUserData($id,$db_con)));   
-        }
-        else{
+            return $response->withJson(json_encode(getUserData($id, $db_con)));
+        } else {
             return $response->withStatus(401);
         }
     }
+
     return $response->withStatus(401);
+    
 });
+
+$app->get('/profile/desc/{id}', function (Request $request, Response $response, array $args) {
+
+    $id = idDecryptor($args['id']);
+    
+    $tkn_auth = $request->getHeader('HTTP_AUTHORIZATION')[0];
+
+    if (validateAuthType($tkn_auth)) {
+
+        $str_token = explode(" ", $tkn_auth)[1];
+
+        if ((validateToken($str_token, $id))) {
+            
+            // conexão do banco
+            $db_con = $this->db;
+            
+            // buscarno banco a descrição
+            return $response->withJson(json_encode(getUserData($id, $db_con)));
+            
+        } else {
+            return $response->withStatus(401);
+        }
+    }
+    
+    
+    
+    
+    die();   
+});
+
+
 
 $app->put('/profile/edit/desc',function(Request $request, Response $response, array $args) {
 
@@ -197,6 +228,7 @@ $app->put('/profile/edit/desc',function(Request $request, Response $response, ar
     return $this->response->write(print_r($this->request->getParsedBody()));
     // return $this->response->write(updateDescription($id_user,$new_desc, $db_con));
 });
+
 
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {
     // Sample log message

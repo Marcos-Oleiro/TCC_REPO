@@ -5,11 +5,7 @@ var img = document.querySelector('img');
 
 
 document.addEventListener('deviceready', function () {
-    loadInfo();
-    // $('#profile_button').click(loadProfile);
-    // $('#passwd_button').click(loadPasswdScreen);
-    // console.log(sessionStorage.getItem('tkn'));
-    
+    loadInfo();    
 });
 
 function loadInfo (){
@@ -26,6 +22,7 @@ function loadInfo (){
     .done(function (data) {
         sessionStorage.setItem('desc',(JSON.parse(data)['description']));
         sessionStorage.setItem('nickname',(JSON.parse(data)['nickname']));
+        sessionStorage.setItem('description', (JSON.parse(data)['description']));
         if (JSON.parse(data)['photography'] === null){
             // img.src = "../img/icon_profile5.png";
         
@@ -36,17 +33,5 @@ function loadInfo (){
     })
     .fail(function (){
         window.location = "../index.html";
-    })
-    $.get(url, function (data){
-        
-    });
-    
+    })    
 }
-
-// function loadProfile(){
-//     console.log("Olá");
-// }
-
-// function loadPasswdScreen(){
-//     console.log("tchau!");
-// }

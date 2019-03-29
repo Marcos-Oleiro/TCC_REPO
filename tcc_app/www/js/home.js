@@ -14,21 +14,19 @@ function loadInfo (){
         headers: {
             // 'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization' : "Bearer " + sessionStorage.getItem('tkn')
+            'Authorization' : "Bearer " + localStorage.getItem('tkn')
         }
     });
-    var url = 'http://localhost:8080/home/' + sessionStorage['id'] ;
+    var url = 'http://localhost:8080/home/' + localStorage['id'] ;
     const jxhr = $.get(url)
     .done(function (data) {
-        sessionStorage.setItem('desc',(JSON.parse(data)['description']));
-        sessionStorage.setItem('nickname',(JSON.parse(data)['nickname']));
-        sessionStorage.setItem('description', (JSON.parse(data)['description']));
+        localStorage.setItem('nickname',(JSON.parse(data)['nickname']));
+        localStorage.setItem('description', (JSON.parse(data)['description']));
         if (JSON.parse(data)['photography'] === null){
             // img.src = "../img/icon_profile5.png";
         
             img.src = "../img/gohan.jpeg";
         }
-        
         divName.textContent = JSON.parse(data)['nickname'];
     })
     .fail(function (){

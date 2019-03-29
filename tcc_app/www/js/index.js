@@ -63,8 +63,8 @@ function SendLoginForm () {
             var url = "http://localhost:8080/login";
             let jxhr = $.post(url, myJSON)
             .done(function (data) {
-                sessionStorage.setItem('id', jxhr.getResponseHeader('id'));
-                sessionStorage.setItem('tkn', data.split(":")[1].split("}")[0].split("\"")[1])
+                localStorage.setItem('id', jxhr.getResponseHeader('id'));
+                localStorage.setItem('tkn', data.split(":")[1].split("}")[0].split("\"")[1])
                 window.location = "html/home.html";
             })
             .fail ( function (data) {

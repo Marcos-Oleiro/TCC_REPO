@@ -7,47 +7,63 @@ var desc_verif_suc = document.querySelector('div.desc_verif_suc');
 
 document.addEventListener('deviceready', function (){
     
-    divName.textContent = sessionStorage['nickname'];
-    // document.querySelector('#desc_text').value = sessionStorage['desc'];
+    divName.textContent = localStorage['nickname'];
+    // document.querySelector('#desc_text').value = localStorage['desc'];
     img.src = "../img/icon_profile5.png";
     loadCurrentDesc();
     $("#form_desc").submit(UpDateDesc);
 });
 
 function loadCurrentDesc(){
-    if ( sessionStorage['description'] !== 'null' ){
-        txtDesc.textContent = sessionStorage['description'];
+    // localStorage['description'] = "teste";
+    if ( localStorage['description'] !== 'null' ){
+        txtDesc.textContent = localStorage['description'];
     }
 }
 
-
 function UpDateDesc (){
-    var new_description = ($(this).serializeArray());
-
-    if ( new_description[0].value.trim().length === 0  ){
-        console.log("Descrição em branco.");
+    
+    var new_description = ($(this).serializeArray())[0].value.trim();
+    
+    if ( new_description.length === 0  ){
         desc_verif_suc.textContent = null;
         desc_verif_fail.textContent = "A nova descrição não poder ser vazia!"
-        
     }
     else{
-        console.log("Descrição salva!");
-        desc_verif_fail.textContent = null;
-        desc_verif_suc.textContent = "Descrição salva!"
+        
         var new_desc_info = {
-            'id' : sessionStorage['id'],
-            'desc' : new_description
+            'new_description' : new_description
         };
+
         $.ajaxSetup({
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Authorization': "Bearer " + localStorage.getItem('tkn')
             }
         });
-        var myJSON = JSON.stringify(new_desc_info);
-        var url = "http://localhost:8080/change_desc";
         
+        var myJSON = JSON.stringify(new_desc_info);
+        var url = "http://localhost:8080/profile/edit/desc" + localStorage.getItem("id");
+    
+        const jxhr = $.ajax({
+            url : url,
+            data : myJSON,
+            type:'PUT',
+        })
+        .done(function (){
+
+        })
+        .fail( function() {
+
+        })
+
+        
+        // console.log("Descrição salva!");
+        // desc_verif_fail.textContent = null;
+        // desc_verif_suc.textContent = "Descrição salva!"
     }
     
     event.preventDefault();
+    
 }

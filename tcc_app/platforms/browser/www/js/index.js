@@ -1,12 +1,16 @@
 var divEmail = document.querySelector('div.email');
 var divPasswd = document.querySelector('div.passwd');
 
-
+const error = new URLSearchParams(location.search);
 
 document.addEventListener('deviceready', function () {
 
     // Função do Jquery - quando o evento submit é realizado, chama a função SendLoginForm
     $("#login_form").submit(SendLoginForm);
+
+    if ( error.get('error') == 1 ) {
+        divEmail.textContent = "Log In expirado, favor logar novamente";
+    }
 });
 
 
@@ -20,8 +24,7 @@ function SendLoginForm () {
     var pattern_passwd = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,10}$/;
     // Final da declaração das variáveis
 
-    // console.log(form_value.length);
-    // return 0;
+
     var empty_fields = checkEmptyFormFields(form_value);
     divEmail.textContent = "";
     divPasswd.textContent = "";

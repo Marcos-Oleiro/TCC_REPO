@@ -44,24 +44,20 @@ function UpDateDesc (){
         });
         
         var myJSON = JSON.stringify(new_desc_info);
-        var url = "http://localhost:8080/profile/edit/desc" + localStorage.getItem("id");
-    
-        const jxhr = $.ajax({
-            url : url,
-            data : myJSON,
-            type:'PUT',
-        })
-        .done(function (){
-
-        })
-        .fail( function() {
-
-        })
-
+        var url = "http://localhost:8080/profile/edit/desc/" + localStorage.getItem("id");
         
-        // console.log("Descrição salva!");
-        // desc_verif_fail.textContent = null;
-        // desc_verif_suc.textContent = "Descrição salva!"
+        // console.log(myJSON);
+        
+        const jxhr = $.post(url,myJSON)
+        .done( function (){    
+            desc_verif_suc.textContent = "Descrição alterada!";
+            desc_verif_fail.textContent = null
+        })
+        .fail( function (){
+            window.location = "../index.html?error=1"
+        })
+        event.preventDefault();
+
     }
     
     event.preventDefault();

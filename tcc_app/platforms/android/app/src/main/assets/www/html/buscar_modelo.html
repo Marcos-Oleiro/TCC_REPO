@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <link rel="stylesheet" type="text/css" href="../css/index.css">
+    <link rel="stylesheet" type="text/css" href="../css/home.css">
+    <link rel="stylesheet" type="text/css" href="../css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:900" rel="stylesheet">
+    <title>Editar Perfil</title>
+</head>
+
+
+<body>
+        
+    <div class="content">
+            <br><br><br>
+        <center>
+            <div class="row">
+                <!-- <nav> -->
+                <nav class="transparent z-depth-0" >
+                    <div class="nav-wrapper" >
+                        <a class="brand-logo center  light-blue lighten-2" style="border-radius: 10px" id="name_button">
+                            <div class="name white-text">Jogador A</div>    
+                        </a>
+                        <ul id="nav-mobile" class="right">
+                            
+                            <!-- Dropdown Trigger-->
+                            <a class='dropdown-button btn-flat' data-activates='dropdown1'><i class="material-icons">more_vert</i></a>
+                            
+                            <!-- Dropdown Structure -->
+                            <ul id='dropdown1' class='dropdown-content'>
+                                <li><a href="home.html" class="light-blue-text">Home</a></li>
+                                <li><a href="#!" class="light-blue-text">Alterar Senha</a></li>
+                            </ul>
+                            
+                        </ul>
+                    </div>
+                </nav>  
+            </div>
+            <br><br>
+            <div class="row" id="fundo">
+                <!-- <img src="../img/gohan.jpeg" alt="Informe a imagem" class=" responsive-img" id="photo">   -->
+                <!-- <img alt="Informe a imagem" class=" responsive-img" id="photo">   -->
+                <img src="../img/icon_profile5.png" alt="Informe a imagem" class=" responsive-img" id="photo">
+                <!-- <img class=" responsive-img" id="photo">   -->
+                <br><br>
+            </div>
+            
+            <div class="desc_verif_fail" style="color: red; font-weight: 900"></div>
+            <div class="desc_verif_suc" style="color: rgb(28, 28, 28); font-weight: 900"></div>
+            
+            <textarea name="desc" id="desc_text" class="materialize-textarea black-text" maxlength="100" form="form_desc" placeholder="Descrição do Jogador" data-length="100"></textarea>      
+            <form action="#" id="form_desc">
+                <button class="btn waves-effect waves-light btn-blue black-text" style="background:whitesmoke" type="submit" name="action" id="btn_reg" >
+                    Enviar Convite
+                </button>
+                <button class="btn waves-effect waves-light btn-blue black-text" style="background:whitesmoke" type="submit" name="action"
+                    id="btn_reg">
+                    Próximo
+                </button>
+            </form>
+            <!-- <form action="#" id="form_desc">
+                <button class="btn waves-effect waves-light btn-blue black-text" style="background:whitesmoke" type="submit" name="action"
+                    id="btn_reg">
+                    Próximo
+                </button>
+            </form> -->
+        </center>
+    </div>
+    <script type="text/javascript" src="../js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="../cordova.js"></script>
+    <script type="text/javascript" src="../js/materialize.min.js"></script>
+    <script type="text/javascript" src="../js/profile.js"></script>
+    <script type="text/javascript">
+        $('.dropdown-trigger').dropdown();
+        $(document).ready(function() {
+            $('input#input_text, textarea#textarea2').characterCounter();
+        });   
+    </script>
+
+
+</body>
+
+</html>

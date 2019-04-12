@@ -1,0 +1,20 @@
+/* #name-div{ */
+    /* background:#80d8ff; */
+/* } */
+#photo{
+    height: 30vh ;
+    width: 65vw;
+
+}
+#name_button{
+    /* height: 8vh ; */
+    width: 45vw;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: red;
+    opacity: 1; /* Firefox */
+}
+.materialize-textarea::-webkit-input-placeholder{
+    color: #130e59
+}

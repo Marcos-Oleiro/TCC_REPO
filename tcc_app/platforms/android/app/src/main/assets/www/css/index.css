@@ -1,0 +1,12 @@
+.content{
+    height: 100vh;
+    width: 100vw;
+    background: no-repeat linear-gradient(358deg,#00b0ff,#eeeeee );
+    font-family: 'Poppins',sans-serif;
+    font-size: 0.8em;
+}
+.logo{
+    /* background: rgb(32, 164, 208); */
+    width: 40vw;
+    height: 35vh;
+}

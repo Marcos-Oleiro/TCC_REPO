@@ -164,10 +164,10 @@ function jwtBuilder ($user_id){
                         ->getToken(); // Retrieves the generated token
 
     return $token;
- }
+}
 
  // confere a validade, autenticidade e propriedade do token
- function validateToken ($str_token, $id){
+function validateToken ($str_token, $id){
 
     $signer = new Sha512();
     
@@ -189,10 +189,23 @@ function jwtBuilder ($user_id){
     }
     
     return true;
- }
+}
 
- function validateAuthType($auth_string){
+ 
+function validateAuthType($auth_string){
 
     $auth_type = strtolower(explode(" ", $auth_string)[0]);
     return (strcmp($auth_type, "bearer") == 0);
- }
+}
+
+
+function updateDescription($new_desc , $id, $db_con) {
+
+    $stmt = $db_con->prepare("UPDATE users SET description = :dcpt WHERE id = :id");
+
+    $stmt->bindParam(":id", $id);
+    $stmt->bindParam(":dcpt", $new_desc);
+    $result = $stmt->execute();
+
+    return $result;
+}

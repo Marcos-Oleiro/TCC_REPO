@@ -165,41 +165,48 @@ $app->get('/home/{id}', function (Request $request, Response $response, array $a
             
             // conexão do banco
             $db_con = $this->db;
-
+            
             return $response->withJson(json_encode(getUserData($id, $db_con)));
         } else {
             return $response->withStatus(401);
         }
     }
-
+    
     return $response->withStatus(401);
     
 });
 
-$app->put('/profile/edit/desc/{id}',function(Request $request, Response $response, array $args) {
-
-    echo $request->getUri();
-    // $new_desc = $this->request->getParsedBody()['new_desc'];
-
-    // echo $new_desc; 
-    die(); 
-    $db_con = $this->db;
-    $_SESSION['logged'] = true;
-
-    // if (isLogged()) {
-        
-        updateDescription($this->request->getParsedBody()['id'],$this->request->getParsedBody()['new_desc'], $db_con);
-
-    // }
-    // else{
-        
-    // }
-  
-
-
+$app->post('/profile/edit/desc/{id}',function (Request $request, Response $response, array $args) {
     
-    // return $this->response->write(print_r($this->request->getParsedBody()));
-    // return $this->response->write(updateDescription($id_user,$new_desc, $db_con));
+    $new_desc = $this->request->getParsedBody()['new_description'];
+    
+    $id = idDecryptor($args['id']);
+    
+    $tkn_auth = $request->getHeader("HTTP_AUTHORIZATION")[0];
+    
+    $db_con = $this->db;
+
+    if ( validateAuthType( $tkn_auth ) ) {
+        
+        $str_token = explode(" ", $tkn_auth)[1];
+        
+        if ( validateToken($str_token, $id) ) {
+            // echo $new_desc;
+
+            if ( updateDescription($new_desc, $id, $db_con) ) {
+            
+                return $response->withStatus(200);
+            }
+        }
+        else {
+            return $response->withStatus(401);            
+        }
+    }
+    else{
+        return $response->withStatus(401);
+    }
+    
+    return $response->withStatus(401);
 });
 
 
@@ -210,4 +217,3 @@ $app->get('/[{name}]', function (Request $request, Response $response, array $ar
     // Render index view
     return $this->renderer->render($response, 'index.phtml', $args);
 });
-

@@ -157,23 +157,17 @@ $app->get('/home/{id}', function (Request $request, Response $response, array $a
 
     $tkn_auth = $request->getHeader("HTTP_AUTHORIZATION")[0];
     
-    if (validateAuthType($tkn_auth)){
+    // verifação do token
+    if (!verifyToken($tkn_auth, $id)) {
 
-        $str_token = explode(" ", $tkn_auth)[1];
-
-        if ((validateToken($str_token, $id))) {
-            
-            // conexão do banco
-            $db_con = $this->db;
-            
-            return $response->withJson(json_encode(getUserData($id, $db_con)));
-        } else {
-            return $response->withStatus(401);
-        }
+        return $response->withStatus(401);
     }
-    
-    return $response->withStatus(401);
-    
+        
+    // conexão do banco
+    $db_con = $this->db;
+            
+    return $response->withJson(json_encode(getUserData($id, $db_con)));
+
 });
 
 // salva no banco de dados a nova descrição
@@ -211,36 +205,30 @@ $app->post('/changepasswd/{id}', function (Request $request , Response $response
     $current_passwd = $this->request->getParsedBody()['passwd'];
     $new_passwd = $this->request->getParsedBody()['new_passwd'];
 
-
     $tkn_auth = $request->getHeader("HTTP_AUTHORIZATION")[0];
 
     // verifação do token
     if ( !verifyToken($tkn_auth, $id)){
         return $response->withStatus(401);
     }
-    var_dump(verifyToken($tkn_auth,$id));
-    // if ( (validatePasswd($current_passwd) == 1 ) || (validatePasswd($new_passwd) == 1 ) ) {
+    // var_dump(verifyToken($tkn_auth,$id));
+    if ( (validatePasswd($current_passwd) == 1 ) || (validatePasswd($new_passwd) == 1 ) ) {
         
-    //     $db_con = $this->db;
+        $db_con = $this->db;
         
-    //     if (checkPasswd($id, dbPass($current_passwd), $db_con)) {
+        if (checkPasswd($id, dbPass($current_passwd), $db_con)) {
             
-    //         updatePasswd($id, dbPass($new_passwd), $db_con);
-    //         echo "senha alterada";
-    //     }
-    //     else{
-    //         echo "senha incorreta";
+            updatePasswd($id, dbPass($new_passwd), $db_con);
+            echo "senha alterada";
+        }
+        else{
+            echo "senha incorreta";
             
-    //     }
+        }
 
-    // }
-    // else {
-        //     echo "senhas não ok" ;
-        // }
-        
-    die();
-    
+    }
 
+    return $response->withStatus(200);
 });
 
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {

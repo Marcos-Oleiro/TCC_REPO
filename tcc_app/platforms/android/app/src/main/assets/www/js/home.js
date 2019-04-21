@@ -12,12 +12,12 @@ function loadInfo (){
     // $('.dropdown-trigger').dropdown();
     $.ajaxSetup({
         headers: {
-            // 'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
             'Accept': 'application/json',
             'Authorization' : "Bearer " + localStorage.getItem('tkn')
         }
     });
-    var url = 'http://localhost:8080/home/' + localStorage['id'] ;
+    var url = 'http://localhost:8080/home/' + localStorage.getItem('id') ;
     const jxhr = $.get(url)
     .done(function (data) {
         localStorage.setItem('nickname',(JSON.parse(data)['nickname']));

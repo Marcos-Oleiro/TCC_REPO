@@ -1,5 +1,5 @@
-var divEmail = document.querySelector('div.email');
-var divPasswd = document.querySelector('div.passwd');
+let divEmail = document.querySelector('div.email');
+let divPasswd = document.querySelector('div.passwd');
 
 const error = new URLSearchParams(location.search);
 
@@ -17,18 +17,18 @@ document.addEventListener('deviceready', function () {
 function SendLoginForm () {
 
     // Declaração de variáveis
-    var form_value;
-    var email, passwd;
-    var form_value = ($(this).serializeArray());
-    var pattern_email = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    var pattern_passwd = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,10}$/;
+    let form_value;
+    let email, passwd;
+    form_value = ($(this).serializeArray());
+    let pattern_email = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    let pattern_passwd = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,10}$/;
     // Final da declaração das variáveis
 
 
-    var empty_fields = checkEmptyFormFields(form_value);
+    let empty_fields = checkEmptyFormFields(form_value);
     divEmail.textContent = "";
     divPasswd.textContent = "";
-    
+
     // Se os campos tiverem preenchidos, deve entrar nesse IF
     if (!empty_fields) {
 
@@ -52,7 +52,7 @@ function SendLoginForm () {
         // Entra aqui se os dois campos estiverem preenchidos corretamente.
         else{
             // console.log("Campos OK");
-            var login_info = {
+            let login_info = {
                 'email' : email,
                 'passwd' : passwd
             };
@@ -62,8 +62,8 @@ function SendLoginForm () {
                     'Accept': ['application/json','text/javascript']
                 }
             });
-            var myJSON = JSON.stringify(login_info);
-            var url = "http://localhost:8080/login";
+            let myJSON = JSON.stringify(login_info);
+            let url = "http://localhost:8080/login";
             let jxhr = $.post(url, myJSON)
             .done(function (data) {
                 localStorage.setItem('id', jxhr.getResponseHeader('id'));

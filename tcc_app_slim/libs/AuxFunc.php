@@ -18,7 +18,6 @@ function checkEmptyFields($user_data){
 
     return false;
 }
-
 // Função que verifica se os campos possuem os nomes corretos...retorna true se tiverem ou false se não tiverem
 function testFieldsNames ($user_data) {
     if ( (array_key_exists('nickname',$user_data) == false ) || (array_key_exists('email',$user_data) == false ) || (array_key_exists('passwd',$user_data) == false )  ){
@@ -26,33 +25,28 @@ function testFieldsNames ($user_data) {
     } 
     return true;
 }
-
 // Função para validar o nickname, retorna true se os campos estiverem ok
 function validateNickname ($nickname){
     
     $pattern_nickaname = "/([A-Z]*|[a-z]*|[0-9]*|[\-_\$]*)^.{4,10}/";
     return validateReGex($pattern_nickaname, $nickname);
 }
-
 // Função para validar o email, retorna true se os campos estiverem ok
 function validateEmail ($email){
     
     $pattern_email = "/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/";
     return validateReGex($pattern_email, $email);
 }
-
 // Função para validar o passwd, retorna true se os campos estiverem ok
 function validatePasswd ($passwd){
 
     $pattern_passwd = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,10}$/";
     return validateReGex($pattern_passwd, $passwd);
 }
-
 // Função que testa um campo dado utilizando uma regex informada.
 function validateReGex ($pattern, $field){
     return (preg_match($pattern, $field));
 }
-
 // Verifica se o campo e-mail já é cadastrado no banco de dados. 
 function checkNewEmail ($email, $db_con){
     
@@ -66,7 +60,6 @@ function checkNewEmail ($email, $db_con){
     }
     return false;
 }
-
 // Verifica se o campo nickname já é cadastrado no banco de dados. 
 function checkNewNickname($nickname, $db_con) {
 
@@ -81,7 +74,6 @@ function checkNewNickname($nickname, $db_con) {
 
     return false;
 }
-
 // função que salva no banco de dados o usuário recém registrado
 function saveNewUser ($nickname, $email, $passwd, $db_con){
     $stmt = $db_con->prepare ("INSERT INTO users (nickname, email,passwd) VALUES(:nickname,:email,:passwd)");
@@ -94,7 +86,6 @@ function saveNewUser ($nickname, $email, $passwd, $db_con){
 function dbPass ($passwd) {
     return hash('sha256',$passwd . 'nirvana' );
 }
-
 // função que transforma a id do usuário para base64 ⁽concatenada com uma string), para ser enviada para o cliente
 function idEncryptor($id) {
     return base64_encode($id.'teste');
@@ -138,7 +129,7 @@ function checkUser ($email, $passwd, $db_con) {
     }
 
 }
-
+// função retorna os dados do usuário
 function getUserData($id, $db_con){
 
     $stmt = $db_con->prepare("SELECT photography, nickname, description FROM users WHERE id = :id");
@@ -149,7 +140,7 @@ function getUserData($id, $db_con){
     return $row;
 
 }
-
+// construtor do token JWT
 function jwtBuilder ($user_id){
 
     $signer = new Sha512();
@@ -165,8 +156,7 @@ function jwtBuilder ($user_id){
 
     return $token;
 }
-
- // confere a validade, autenticidade e propriedade do token
+// confere a validade, autenticidade e propriedade do token
 function validateToken ($str_token, $id){
 
     $signer = new Sha512();
@@ -190,21 +180,52 @@ function validateToken ($str_token, $id){
     
     return true;
 }
-
- 
+// validar o tipo do token 
 function validateAuthType($auth_string){
 
     $auth_type = strtolower(explode(" ", $auth_string)[0]);
     return (strcmp($auth_type, "bearer") == 0);
 }
+// função para fazer a verificação total do token
+function verifyToken($tkn_auth,$id){
 
+    if ( !validateAuthType($tkn_auth))
+        return false;
 
+    $str_token = explode(" ",$tkn_auth)[1];
+    
+    if ( !validateToken($str_token, $id) )
+        return false;
+        
+    return true;
+}
+// função para atualizar a descrição do usuário
 function updateDescription($new_desc , $id, $db_con) {
 
     $stmt = $db_con->prepare("UPDATE users SET description = :dcpt WHERE id = :id");
 
     $stmt->bindParam(":id", $id);
     $stmt->bindParam(":dcpt", $new_desc);
+    $result = $stmt->execute();
+
+    return $result;
+}
+// função para verificar a senha com a ID informada
+function checkPasswd ($id, $passwd, $db_con) {
+    
+    $stmt = $db_con->prepare("SELECT passwd FROM users WHERE id = :id");
+    $stmt->bindParam(":id",$id);
+    $stmt->execute();
+    return  (strcmp($stmt->fetch()['passwd'],$passwd) == 0);
+}
+// função para atualizar a senha do usuário
+function updatePasswd ($id, $passwd, $db_con){
+
+
+    $stmt = $db_con->prepare("UPDATE users SET passwd = :passwd WHERE id = :id");
+
+    $stmt->bindParam(":passwd", $passwd);
+    $stmt->bindParam(":id", $id);
     $result = $stmt->execute();
 
     return $result;

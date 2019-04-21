@@ -7,10 +7,10 @@ require dirname(__FILE__) . '/../libs/AuxFunc.php';
 
 // Routes
 $app->get('/hello/{name}', function ($request, $response, $args) {
-//    return $response->write("Hello " . $args['name']);
    $string = "hello " . $args['name'];
    return $response->withJson($string);
 });
+
 $app->get('/games', function (Request $request, Response $response, array $args) {
 
     $stmt = $this->db->query("SELECT * FROM games");
@@ -176,6 +176,7 @@ $app->get('/home/{id}', function (Request $request, Response $response, array $a
     
 });
 
+// salva no banco de dados a nova descrição
 $app->post('/profile/edit/desc/{id}',function (Request $request, Response $response, array $args) {
     
     $new_desc = $this->request->getParsedBody()['new_description'];
@@ -186,29 +187,61 @@ $app->post('/profile/edit/desc/{id}',function (Request $request, Response $respo
     
     $db_con = $this->db;
 
-    if ( validateAuthType( $tkn_auth ) ) {
+    // verifação do token
+    if (!verifyToken($tkn_auth, $id)) {
         
-        $str_token = explode(" ", $tkn_auth)[1];
-        
-        if ( validateToken($str_token, $id) ) {
-            // echo $new_desc;
-
-            if ( updateDescription($new_desc, $id, $db_con) ) {
-            
-                return $response->withStatus(200);
-            }
-        }
-        else {
-            return $response->withStatus(401);            
-        }
-    }
-    else{
         return $response->withStatus(401);
+    }
+
+    //  atualizaçã da descrição
+    if ( updateDescription($new_desc, $id, $db_con) ) {
+        
+        return $response->withStatus(200);
     }
     
     return $response->withStatus(401);
+    
 });
 
+// salva no banco de dados a nova senha
+$app->post('/changepasswd/{id}', function (Request $request , Response $response, array $args){
+
+    
+    $id = idDecryptor($args['id']);
+    $current_passwd = $this->request->getParsedBody()['passwd'];
+    $new_passwd = $this->request->getParsedBody()['new_passwd'];
+
+
+    $tkn_auth = $request->getHeader("HTTP_AUTHORIZATION")[0];
+
+    // verifação do token
+    if ( !verifyToken($tkn_auth, $id)){
+        return $response->withStatus(401);
+    }
+    var_dump(verifyToken($tkn_auth,$id));
+    // if ( (validatePasswd($current_passwd) == 1 ) || (validatePasswd($new_passwd) == 1 ) ) {
+        
+    //     $db_con = $this->db;
+        
+    //     if (checkPasswd($id, dbPass($current_passwd), $db_con)) {
+            
+    //         updatePasswd($id, dbPass($new_passwd), $db_con);
+    //         echo "senha alterada";
+    //     }
+    //     else{
+    //         echo "senha incorreta";
+            
+    //     }
+
+    // }
+    // else {
+        //     echo "senhas não ok" ;
+        // }
+        
+    die();
+    
+
+});
 
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {
     // Sample log message

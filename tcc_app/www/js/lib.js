@@ -1,16 +1,15 @@
-function checkEmptyFormFields(form_value) {
+function checkEmptyFormFields (form_value) {
 
-    if ((form_value[0].value.trim().length == 0) || (form_value[1].value.trim().length == 0) ) {
+    const size_form = form_value.length;
+    
+    // console.log(size_form);
+    let i = 0;
+    for ( i ; i < size_form ; i++) {
+        // console.log(i);
+        if ( form_value[i].value.trim()  == 0){
 
-        if (form_value.length == 4){
-            if ((form_value[2].value.trim().length == 0) || (form_value[3].value.trim().length == 0)){
-                return true;
-            }
-            else {
-                return false;
-            }
+            return true;
         }
-        return true;
     }
     return false;
 }

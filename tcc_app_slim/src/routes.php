@@ -211,6 +211,7 @@ $app->post('/changepasswd/{id}', function (Request $request , Response $response
     if ( !verifyToken($tkn_auth, $id)){
         return $response->withStatus(401);
     }
+    
     // var_dump(verifyToken($tkn_auth,$id));
     if ( (validatePasswd($current_passwd) == 1 ) || (validatePasswd($new_passwd) == 1 ) ) {
         
@@ -219,15 +220,21 @@ $app->post('/changepasswd/{id}', function (Request $request , Response $response
         if (checkPasswd($id, dbPass($current_passwd), $db_con)) {
             
             updatePasswd($id, dbPass($new_passwd), $db_con);
-            echo "senha alterada";
         }
         else{
-            echo "senha incorreta";
-            
+
+            $body = $response->getBody();
+            $body->write("Senha informada incorreta");
+            return $response->withStatus(400); 
         }
-
     }
+    else{
 
+        $body = $response->getBody();
+        $body->write("Senha nao valida");
+        return $response->withStatus(400);
+    }
+    
     return $response->withStatus(200);
 });
 

@@ -43,10 +43,22 @@ function changePasswd (){
                 const url = "http://localhost:8080/changepasswd/" + localStorage.getItem('id');
                 const jxhr = $.post(url, myJSON)    
                 .done(function () {
-
+                    // informar que a senha foi alterad
+                    divNew_passwd.textContent = ""
+                    divPasswd.textContent = "Senha alterada com sucesso";
+                    
                 })
                 .fail(function (){
-
+                    
+                    if ( jxhr.status == 400 ){
+                        divNew_passwd.textContent = ""
+                        divPasswd.textContent = "Senha atual informada incorreta";
+                        // console.log('senha errada')
+                    }
+                    if (jxhr.status == 401){
+                        console.log('sem acesso')
+                        
+                    }
                 });
             }
             else{

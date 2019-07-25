@@ -1,6 +1,7 @@
 <?php
 
 namespace Oleiro\JWT;
+header('Access-Control-Allow-Origin: *');
 
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
@@ -8,6 +9,7 @@ use Lcobucci\JWT\Signer\Hmac\Sha512;
 
 class JWTHandler
 {
+    
     // construtor do token JWT
     public static function jwtBuilder($user_id)
     {

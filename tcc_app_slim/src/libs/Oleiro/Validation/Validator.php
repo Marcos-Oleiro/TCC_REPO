@@ -15,7 +15,9 @@ class Validator
         } elseif ((strlen($user_data_values[0]) == 0) || (strlen($user_data_values[1]) == 0) || (strlen($user_data_values[2]) == 0)) {
             return true;
         }
+
         return false;
+
     }
     // Função que verifica se os campos possuem os nomes corretos...retorna true se tiverem ou false se não tiverem
     public static function testFieldsNames($user_data)

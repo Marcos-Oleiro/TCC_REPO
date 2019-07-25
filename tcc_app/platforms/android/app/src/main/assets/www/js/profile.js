@@ -9,7 +9,7 @@ document.addEventListener('deviceready', function (){
     
     divName.textContent = localStorage['nickname'];
     // document.querySelector('#desc_text').value = localStorage['desc'];
-    img.src = "../img/icon_profile5.png";
+    // img.src = "../img/icon_profile5.png";
     loadCurrentDesc();
     $("#form_desc").submit(UpDateDesc);
 });

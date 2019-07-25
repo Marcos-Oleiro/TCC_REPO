@@ -1,6 +1,8 @@
 <?php
 
 namespace Oleiro\DB;
+header('Access-Control-Allow-Origin: *');
+
 
 class DBHandler
 {
@@ -13,7 +15,7 @@ class DBHandler
         $stmt->execute();
         $row = $stmt->fetch(); // se não for encontrado resultado, o fetch retorna false
 
-        if (($row == false)) {
+        if ($row == false) {
             return true; // true indica que o usuário é novo
         }
         return false;

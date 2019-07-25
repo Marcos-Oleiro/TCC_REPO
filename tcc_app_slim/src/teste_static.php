@@ -1,19 +1,20 @@
-
 <?php
 
+use Oleiro\Data\DataHandler;
 use Oleiro\DB\DBHandler;
-use Oleiro\Validation\Validator;
 use Oleiro\JWT\JWTHandler;
+use Oleiro\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Oleiro\Data\DataHandler;
 
-// require dirname(__FILE__) . '/../libs/AuxFunc.php';
+require dirname(__FILE__) . '/../libs/AuxFunc.php';
+
 // Routes
 $app->get('/hello/{name}', function ($request, $response, $args) {
     $string = "hello " . $args['name'];
     return $response->withJson($string);
 });
+
 $app->get('/games', function (Request $request, Response $response, array $args) {
 
     $stmt = $this->db->query("SELECT * FROM games");
@@ -87,42 +88,47 @@ $app->post('/users', function (Request $request, Response $response, array $args
 
 // método para validar os dados de login do usuário
 $app->post('/login', function (Request $request, Response $response, array $args) {
+
     // a resposta deve ir para o front-end em formna de json, então eu faço um array e o transformo em json
     $answer = [];
+
     // conexão do banco
     $db_con = $this->db;
+
     // vetor com as informações que vem via formulário
     $user_data = $this->request->getParsedBody();
+
     // inserir um novo item dentro do array para poder utilizar as mesmas funções que foram usadas no formulário de registro.
     $user_data['nickname'] = 'nickname';
-    
-    // verifique se os campos estão vazios
 
+    // verifique se os campos estão vazios
     if (!Validator::checkEmptyFields($user_data)) {
-        
-    // if (!checkEmptyFields($user_data)) {
-        
+
         // verifica se os dados vieram com os campos necessários
-        // if (testFieldsNames($user_data)) {
         if (Validator::testFieldsNames($user_data)) {
-            $db_data = DBHandler::checkUser($user_data['email'], DataHandler::dbPass($user_data['passwd']), $db_con);
+
+            $db_data = DBHandler::checkUser($user_data['email'], dbPass($user_data['passwd']), $db_con);
+
             $token = JWTHandler::jwtBuilder($db_data);
             if (is_numeric($db_data)) { // se os dados estiverem corretos
                 $response = $response->withHeader('id', DataHandler::idEncryptor($db_data))
                     ->withHeader("Access-Control-Expose-Headers", "id");
+
                 //  transformar o objeto token em string para enviar para o cliente
                 $message = array(
                     'token' => (string) $token,
                 );
+
                 $str_json = json_encode($message);
                 // campos verificados, usuário verificado, token gerado
                 // retorna token e http code 200 - OK
-                echo $token; die();
                 return $response->withJson($str_json)->withStatus(200);
+
             } else { // dados não batendo com os dados do banco de dados
                 $body = $response->getBody();
                 $body->write($db_data);
                 return $response->withStatus(400);
+
             }
         } else {
             // request inválida
@@ -135,66 +141,100 @@ $app->post('/login', function (Request $request, Response $response, array $args
         return $response->withStatus(400);
     }
 });
+
 // retorna as informações  necessárias do usuário com a id informada.
 $app->get('/home/{id}', function (Request $request, Response $response, array $args) {
+
     // pega a id "encriptada" e transformma em ID numérico
-    $id = idDecryptor($args['id']);
+    $id = DataHandler::idDecryptor($args['id']);
+
     // MXRlc3Rl
+
     $tkn_auth = $request->getHeader("HTTP_AUTHORIZATION")[0];
+
     // verifação do token
-    if (!verifyToken($tkn_auth, $id)) {
+    // if (!verifyToken($tkn_auth, $id)) {
+    if (!JWTHandler::verifyToken($tkn_auth, $id)) {
+
         return $response->withStatus(401);
     }
+
     // conexão do banco
     $db_con = $this->db;
-    return $response->withJson(json_encode(getUserData($id, $db_con)));
+
+    return $response->withJson(json_encode(DBHandler::getUserData($id, $db_con)));
+
 });
+
 // salva no banco de dados a nova descrição
 $app->post('/profile/edit/desc/{id}', function (Request $request, Response $response, array $args) {
+
     $new_desc = $this->request->getParsedBody()['new_description'];
-    $id = idDecryptor($args['id']);
+
+    $id = DataHandler::idDecryptor($args['id']);
+
     $tkn_auth = $request->getHeader("HTTP_AUTHORIZATION")[0];
+
     $db_con = $this->db;
+
     // verifação do token
-    if (!verifyToken($tkn_auth, $id)) {
+    if (!JWTHandler::verifyToken($tkn_auth, $id)) {
+
         return $response->withStatus(401);
     }
+
     //  atualizaçã da descrição
-    if (updateDescription($new_desc, $id, $db_con)) {
+    if (DBHandler::updateDescription($new_desc, $id, $db_con)) {
+
         return $response->withStatus(200);
     }
+
     return $response->withStatus(401);
+
 });
+
 // salva no banco de dados a nova senha
 $app->post('/changepasswd/{id}', function (Request $request, Response $response, array $args) {
-    $id = idDecryptor($args['id']);
+
+    $id = DataHandler::idDecryptor($args['id']);
     $current_passwd = $this->request->getParsedBody()['passwd'];
     $new_passwd = $this->request->getParsedBody()['new_passwd'];
+
     $tkn_auth = $request->getHeader("HTTP_AUTHORIZATION")[0];
+
     // verifação do token
-    if (!verifyToken($tkn_auth, $id)) {
+    if (!JWTHandler::verifyToken($tkn_auth, $id)) {
         return $response->withStatus(401);
     }
+
     // var_dump(verifyToken($tkn_auth,$id));
-    if ((validatePasswd($current_passwd) == 1) || (validatePasswd($new_passwd) == 1)) {
+    if ((Validator::validatePasswd($current_passwd) == 1) || (Validator::validatePasswd($new_passwd) == 1)) {
+
         $db_con = $this->db;
-        if (checkPasswd($id, dbPass($current_passwd), $db_con)) {
-            updatePasswd($id, dbPass($new_passwd), $db_con);
+
+        if (DBHandler::checkPasswd($id, dbPass($current_passwd), $db_con)) {
+
+            DBHandler::updatePasswd($id, dbPass($new_passwd), $db_con);
         } else {
+
             $body = $response->getBody();
             $body->write("Senha informada incorreta");
             return $response->withStatus(400);
         }
     } else {
+
         $body = $response->getBody();
         $body->write("Senha nao valida");
         return $response->withStatus(400);
     }
+
     return $response->withStatus(200);
 });
+
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {
     // Sample log message
     $this->logger->info("Slim-Skeleton '/' route");
+
     // Render index view
     return $this->renderer->render($response, 'index.phtml', $args);
 });

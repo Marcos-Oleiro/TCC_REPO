@@ -2,6 +2,7 @@
 
 namespace Oleiro\Data;
 
+
 class DataHandler
 {
     // função devolve o password que vai ser salvo no banco de dados

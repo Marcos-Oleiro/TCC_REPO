@@ -32,21 +32,21 @@ class Validator
     {
 
         $pattern_nickaname = "/([A-Z]*|[a-z]*|[0-9]*|[\-_\$]*)^.{4,10}/";
-        return validateReGex($pattern_nickaname, $nickname);
+        return self::validateReGex($pattern_nickaname, $nickname);
     }
     // Função para validar o email, retorna true se os campos estiverem ok
     public static function validateEmail($email)
     {
 
         $pattern_email = "/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/";
-        return validateReGex($pattern_email, $email);
+        return self::validateReGex($pattern_email, $email);
     }
     // Função para validar o passwd, retorna true se os campos estiverem ok
     public static function validatePasswd($passwd)
     {
 
         $pattern_passwd = "/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,10}$/";
-        return validateReGex($pattern_passwd, $passwd);
+        return self::validateReGex($pattern_passwd, $passwd);
     }
     // Função que testa um campo dado utilizando uma regex informada.
     public static function validateReGex($pattern, $field)

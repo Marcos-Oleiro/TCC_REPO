@@ -1,12 +1,12 @@
 
 <?php
 
+use Oleiro\Data\DataHandler;
 use Oleiro\DB\DBHandler;
-use Oleiro\Validation\Validator;
 use Oleiro\JWT\JWTHandler;
+use Oleiro\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Oleiro\Data\DataHandler;
 
 // require dirname(__FILE__) . '/../libs/AuxFunc.php';
 // Routes
@@ -25,7 +25,6 @@ $app->get('/games', function (Request $request, Response $response, array $args)
         ];
     }
     return $response->withJson($games);
-
 });
 
 // método para adicionar usuários ao banco de dados  (Registro de novos usuários)
@@ -60,7 +59,7 @@ $app->post('/users', function (Request $request, Response $response, array $args
 
                     $body = $response->getBody();
 
-                    $body->write("Email já cadastrado, favor escolher outro");
+                    $body->write(json_encode(array('erro' => "Email já cadastrado, favor escolher outro")));
 
                     return $response->withStatus(400);
                 }
@@ -68,14 +67,15 @@ $app->post('/users', function (Request $request, Response $response, array $args
 
                     $body = $response->getBody();
 
-                    $body->write("Nickname já cadastrado, favor escolher outro");
+                    $body->write(json_encode(array('erro' => "Nickname já cadastrado, favor escolher outro")));
+                    // json_encode(array('erro' => $db_data))
 
                     return $response->withStatus(400);
                 }
 
                 $user_data['passwd'] = dbPass($user_data['passwd']);
                 DBHandler::saveNewUser($user_data['nickname'], $user_data['email'], $user_data['passwd'], $db_con);
-                return $response->withStatus(200)->write("ok!");
+                return $response->withStatus(201)->write("ok!");
             }
         } else {
             return $response->withStatus(400);
@@ -95,13 +95,13 @@ $app->post('/login', function (Request $request, Response $response, array $args
     $user_data = $this->request->getParsedBody();
     // inserir um novo item dentro do array para poder utilizar as mesmas funções que foram usadas no formulário de registro.
     $user_data['nickname'] = 'nickname';
-    
+
     // verifique se os campos estão vazios
 
     if (!Validator::checkEmptyFields($user_data)) {
-        
-    // if (!checkEmptyFields($user_data)) {
-        
+
+        // if (!checkEmptyFields($user_data)) {
+
         // verifica se os dados vieram com os campos necessários
         // if (testFieldsNames($user_data)) {
         if (Validator::testFieldsNames($user_data)) {
@@ -117,11 +117,10 @@ $app->post('/login', function (Request $request, Response $response, array $args
                 $str_json = json_encode($message);
                 // campos verificados, usuário verificado, token gerado
                 // retorna token e http code 200 - OK
-                echo $token; die();
                 return $response->withJson($str_json)->withStatus(200);
             } else { // dados não batendo com os dados do banco de dados
                 $body = $response->getBody();
-                $body->write($db_data);
+                $body->write(json_encode(array('erro' => $db_data)));
                 return $response->withStatus(400);
             }
         } else {
@@ -138,48 +137,51 @@ $app->post('/login', function (Request $request, Response $response, array $args
 // retorna as informações  necessárias do usuário com a id informada.
 $app->get('/home/{id}', function (Request $request, Response $response, array $args) {
     // pega a id "encriptada" e transformma em ID numérico
-    $id = idDecryptor($args['id']);
+    // $id = idDecryptor($args['id']);
+    $id = DataHandler::idDecryptor($args['id']);
     // MXRlc3Rl
     $tkn_auth = $request->getHeader("HTTP_AUTHORIZATION")[0];
     // verifação do token
-    if (!verifyToken($tkn_auth, $id)) {
+    // if (!verifyToken($tkn_auth, $id)) {
+    if (!JWTHandler::verifyToken($tkn_auth, $id)) {
         return $response->withStatus(401);
     }
+    // echo ("olá");die();
     // conexão do banco
     $db_con = $this->db;
-    return $response->withJson(json_encode(getUserData($id, $db_con)));
+    return $response->withJson(json_encode(DBHandler::getUserData($id, $db_con)));
 });
 // salva no banco de dados a nova descrição
-$app->post('/profile/edit/desc/{id}', function (Request $request, Response $response, array $args) {
+$app->put('/profile/edit/desc/{id}', function (Request $request, Response $response, array $args) {
     $new_desc = $this->request->getParsedBody()['new_description'];
-    $id = idDecryptor($args['id']);
+    $id = DataHandler::idDecryptor($args['id']);
     $tkn_auth = $request->getHeader("HTTP_AUTHORIZATION")[0];
     $db_con = $this->db;
     // verifação do token
-    if (!verifyToken($tkn_auth, $id)) {
+    if (!JWTHandler::verifyToken($tkn_auth, $id)) {
         return $response->withStatus(401);
     }
     //  atualizaçã da descrição
-    if (updateDescription($new_desc, $id, $db_con)) {
+    if (DBHandler::updateDescription($new_desc, $id, $db_con)) {
         return $response->withStatus(200);
     }
     return $response->withStatus(401);
 });
 // salva no banco de dados a nova senha
 $app->post('/changepasswd/{id}', function (Request $request, Response $response, array $args) {
-    $id = idDecryptor($args['id']);
+    $id = DataHandler::idDecryptor($args['id']);
     $current_passwd = $this->request->getParsedBody()['passwd'];
     $new_passwd = $this->request->getParsedBody()['new_passwd'];
     $tkn_auth = $request->getHeader("HTTP_AUTHORIZATION")[0];
     // verifação do token
-    if (!verifyToken($tkn_auth, $id)) {
+    if (!JWTHandler::verifyToken($tkn_auth, $id)) {
         return $response->withStatus(401);
     }
     // var_dump(verifyToken($tkn_auth,$id));
-    if ((validatePasswd($current_passwd) == 1) || (validatePasswd($new_passwd) == 1)) {
+    if ((Validator::validatePasswd($current_passwd) == 1) || (Validator::validatePasswd($new_passwd) == 1)) {
         $db_con = $this->db;
-        if (checkPasswd($id, dbPass($current_passwd), $db_con)) {
-            updatePasswd($id, dbPass($new_passwd), $db_con);
+        if (DBHandler::checkPasswd($id, DataHandler::dbPass($current_passwd), $db_con)) {
+            DBHandler::updatePasswd($id, DataHandler::dbPass($new_passwd), $db_con);
         } else {
             $body = $response->getBody();
             $body->write("Senha informada incorreta");
@@ -191,6 +193,18 @@ $app->post('/changepasswd/{id}', function (Request $request, Response $response,
         return $response->withStatus(400);
     }
     return $response->withStatus(200);
+});
+$app->get('/profile/desc/{id}', function (Request $request, Response $response, array $args) {
+
+    $tkn_auth = $request->getHeader("HTTP_AUTHORIZATION")[0];
+
+    if (!JWTHandler::verifyToken($tkn_auth, $id)) {
+        return $response->withStatus(401);
+    }
+
+
+    echo $tkn_auth;
+    die();
 });
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {
     // Sample log message

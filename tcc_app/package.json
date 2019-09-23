@@ -10,7 +10,7 @@
     "author": "Apache Cordova Team",
     "license": "Apache-2.0",
     "dependencies": {
-        "browser-sync": "^2.26.3",
+        "browser-sync": "^2.26.7",
         "cheerio": "^0.22.0",
         "cordova": "^9.0.0",
         "cordova-android": "^7.1.4",
@@ -20,7 +20,7 @@
         "csp-parse": "0.0.2",
         "elementtree": "^0.1.7",
         "glob": "^5.0.15",
-        "npm": "^6.9.0",
+        "npm": "^6.10.2",
         "plist": "^3.0.1",
         "q": "^1.5.1"
     },
@@ -30,5 +30,9 @@
             "cordova-plugin-browsersync": {}
         },
         "platforms": []
+    },
+    "devDependencies": {
+        "eslint": "^6.1.0",
+        "eslint-config-google": "^0.13.0"
     }
 }
